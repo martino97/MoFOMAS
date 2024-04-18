@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mofomas"
+        tools:context=".SignUp3rdClass">
+
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp"
+            android:layout_marginBottom="370dp"
+            android:fontFamily="cursive"
+            android:text="Login here"
+            android:transitionName="Login_here"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.461"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.209" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview"
+            android:layout_width="match_parent"
+            android:layout_height="420dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="230dp"
+            android:textColorHint="@color/white"
+            app:cardCornerRadius="28dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:foregroundGravity="fill"
+            app:cardElevation="8dp"
+            android:outlineSpotShadowColor="@color/Green"
+            android:alpha="1.7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="415dp"
+                android:orientation="vertical"
+                tools:ignore="MissingConstraints">
+
+              
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    app:boxCornerRadiusBottomEnd="30dp"
+                    app:boxCornerRadiusBottomStart="30dp"
+                    app:boxCornerRadiusTopEnd="30dp"
+                    app:boxCornerRadiusTopStart="30dp"
+                    app:boxStrokeWidth="2dp"
+                    style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                    android:hint="Password"
+                    app:startIconDrawable="@drawable/security"
+                    app:endIconMode="password_toggle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/Loginpsd"
+                        android:layout_height="match_parent"
+                        android:transitionName="password"
+                        android:inputType="textPassword"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:id="@+id/checkbox"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                        android:text="@string/remember_me"
+                        android:buttonTint="@color/black"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:id="@+id/forgetbtn"
+                        android:layout_height="wrap_content"
+                        android:text="@string/forgot_password"
+                        android:background="#00000000"
+                        android:textColor="@color/black"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"/>
+
+                </RelativeLayout>
+                <Button
+                    android:id="@+id/loginid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit"
+                    android:textColor="@color/black"
+                    android:transitionName="login"
+                    android:text="Login"
+                    android:textSize="20sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="20dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:id="@+id/Loginreg"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_account"
+                    android:background="#00000000"
+                    android:transitionName="create acc"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

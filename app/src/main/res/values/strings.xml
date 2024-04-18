@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MoFOMAS</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_registerd">Already Registerd?</string>
+    <string name="already_registered" />
+</resources>
