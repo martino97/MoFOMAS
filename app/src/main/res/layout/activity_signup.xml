@@ -125,29 +125,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            app:boxCornerRadiusBottomEnd="30dp"
-            app:boxCornerRadiusBottomStart="30dp"
-            app:boxCornerRadiusTopEnd="30dp"
-            app:boxCornerRadiusTopStart="30dp"
-            app:boxStrokeWidth="2dp"
-            android:layout_marginEnd="5dp"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-            android:hint="Phone number"
-            app:startIconDrawable="@drawable/person"
-            app:endIconMode="clear_text">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:id="@+id/Loginuser"
-                android:layout_height="match_parent"
-                android:inputType="phone"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

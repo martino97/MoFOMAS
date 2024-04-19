@@ -57,41 +57,43 @@
                 android:orientation="vertical"
                 tools:ignore="MissingConstraints">
 
-              <com.hbb20.CountryCodePicker
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  app:ccp_autoDetectCountry="true"
-                  app:ccp_showFlag="true"
-                  android:layout_marginTop="20dp"
-                  android:layout_marginStart="5dp"
-                  android:layout_marginEnd="5dp"
-                  app:ccp_showNameCode="true"
-                  app:ccp_showFullName="true"
-                  android:background="@drawable/edit"/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Verification Code"
+                    android:textSize="30sp"
+                    android:textColor="@color/Green"
+                    android:textStyle="bold"
                     android:layout_marginTop="20dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    app:boxCornerRadiusBottomEnd="30dp"
-                    app:boxCornerRadiusBottomStart="30dp"
-                    app:boxCornerRadiusTopEnd="30dp"
-                    app:boxCornerRadiusTopStart="30dp"
-                    app:boxStrokeWidth="2dp"
-                    style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-                    android:hint="Phone"
-                    app:startIconDrawable="@drawable/phone"
-                    app:endIconMode="clear_text">
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter the One Time Password\n Sent to your Phone +255***"
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/verification"
-                        android:layout_height="match_parent"
-                        android:inputType="phone"/>
+                <com.chaos.view.PinView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:itemCount="6"
+                    app:itemRadius="5dp"
+                    android:textColor="@color/Green"
+                    app:itemWidth="50dp"
+                    app:itemHeight="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    style="@style/PinWidget.PinView"
+                    android:inputType="number"
+                    android:cursorVisible="false"
+                    app:hideLineWhenFilled="true"/>
 
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/loginid"
@@ -100,7 +102,7 @@
                     android:background="@drawable/edit"
                     android:textColor="@color/black"
                     android:transitionName="login"
-                    android:text="Verify"
+                    android:text="Verify Code"
                     android:textSize="20sp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"

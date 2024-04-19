@@ -37,6 +37,7 @@ dependencies {
     implementation (libs.ccp)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
+    implementation (libs.chaosleung.pinview)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
