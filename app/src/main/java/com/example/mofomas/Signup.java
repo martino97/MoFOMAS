@@ -96,10 +96,8 @@ public class Signup extends AppCompatActivity {
         if (val.isEmpty()) {
             email.setError("Field  can not be empty");
             return false;
-        } else if (val.length() > 20) {
-            email.setError("Username is too long");
-            return false;
-        } else if (!val.matches(checkEmail)) {
+        }
+        else if (!val.matches(checkEmail)) {
             email.setError("Invalid email address");
             return false;
         } else {
