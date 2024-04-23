@@ -94,13 +94,14 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/loginid"
+                    android:id="@+id/verifyid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit"
                     android:textColor="@color/black"
                     android:transitionName="login"
                     android:text="Verify"
+                    android:onClick="verifyOTP"
                     android:textSize="20sp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
