@@ -67,7 +67,8 @@
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:hint="Fullname"
         app:startIconDrawable="@drawable/person"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -144,7 +145,7 @@
         app:boxStrokeWidth="2dp"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:hint="Password"
-        app:startIconDrawable="@drawable/security"
+        app:startIconDrawable="@drawable/securitytwo"
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText

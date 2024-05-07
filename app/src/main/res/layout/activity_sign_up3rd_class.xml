@@ -5,12 +5,10 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/mofomas"
         tools:context=".SignUp3rdClass">
 
@@ -22,7 +20,7 @@
             android:layout_marginTop="-10dp"
             android:layout_marginBottom="370dp"
             android:fontFamily="cursive"
-            android:text="Verfication"
+            android:text="@string/verfication"
             android:transitionName="Login_here"
             android:textAlignment="center"
             android:textSize="40sp"
@@ -58,6 +56,7 @@
                 tools:ignore="MissingConstraints">
 
               <com.hbb20.CountryCodePicker
+                  android:id="@+id/countryCode"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   app:ccp_autoDetectCountry="true"
@@ -66,10 +65,11 @@
                   android:layout_marginStart="5dp"
                   android:layout_marginEnd="5dp"
                   app:ccp_showNameCode="true"
-                  app:ccp_showFullName="true"
+                  app:ccp_showFullName="false"
                   android:background="@drawable/edit"/>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signUpNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -94,14 +94,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/verifyid"
+                    android:id="@+id/verificationId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit"
                     android:textColor="@color/black"
-                    android:transitionName="login"
                     android:text="Verify"
-                    android:onClick="verifyOTP"
+                    android:onClick="verifyOTPScreen"
                     android:textSize="20sp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"

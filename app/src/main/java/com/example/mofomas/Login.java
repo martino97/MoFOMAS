@@ -64,4 +64,9 @@ public class Login extends AppCompatActivity {
             return insets;
         });
     }
+public  void forgetPassword(View view)
+{
+    Intent intent = new Intent(Login.this,MakeSelection.class);
+    startActivity(intent);
+}
 }

@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -36,8 +38,19 @@ dependencies {
     implementation(libs.activity)
     implementation (libs.ccp)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database.v2005)
+    implementation(libs.firebase.storage)
+    implementation (platform(libs.firebase.bom))
+    //noinspection UseTomlInstead
+    implementation ("com.google.firebase:firebase-auth-ktx")
     testImplementation(libs.junit)
     implementation (libs.chaosleung.pinview)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+       //mplementation (libs.appcompat.v7)
+       //mplementation (libs.design)
+       //mplementation (libs.android.support.vector.drawable)
+
+
 }

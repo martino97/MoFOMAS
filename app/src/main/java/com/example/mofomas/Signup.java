@@ -120,7 +120,7 @@ public class Signup extends AppCompatActivity {
             password.setError("Field  can not be empty");
             return false;
         } else if (!val.matches(checkPassword)) {
-            password.setError("Password should contain four characters");
+            password.setError("Password should contain at least one special character");
             return false;
         } else {
             password.setError(null);

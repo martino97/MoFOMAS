@@ -5,4 +5,6 @@
     <string name="create_account">Create Account</string>
     <string name="already_registerd">Already Registerd?</string>
     <string name="already_registered" />
+    <string name="provide_your_account_s_email_which_you_want_to_reset_your_password">Provide Your Account\'s Email Which you want to reset your email</string>
+    <string name="verfication">Verfication</string>
 </resources>

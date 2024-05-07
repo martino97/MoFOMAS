@@ -18,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.FirebaseApp;
+
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;
     //Animation variables
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
         //Animation
         topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
