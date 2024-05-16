@@ -3,6 +3,8 @@ package com.example.mofomas;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,53 +22,52 @@ public class Signup2ndClass extends AppCompatActivity {
     RadioGroup radio;
     DatePicker agePicker;
     RadioButton selectedGender;
+    Button submitbtn,login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_signup2nd_class);
         //Hooks for passing data into next activity
         radio =findViewById(R.id.radioGroup);
         agePicker = findViewById(R.id.datePicker);
+        submitbtn =findViewById(R.id.loginid);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+            submitbtn.setOnClickListener(new  View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!validateGender() || !validateAge()) {
+                        return;
+                    }
+                    selectedGender = findViewById(radio.getCheckedRadioButtonId());
+                    String gender = selectedGender.getText().toString();
+                    int day = agePicker.getDayOfMonth();
+                    int month = agePicker.getMonth();
+                    int year = agePicker.getYear();
+                    String dateOfBirth = day + "/" + (month + 1) + "/" + year;
+
+                    String fullNameText = getIntent().getStringExtra("FullName");
+                    String usernameText = getIntent().getStringExtra("Username");
+                    String emailText = getIntent().getStringExtra("Email");
+                    String passwordText = getIntent().getStringExtra("Password");
+
+                    Intent intent = new Intent(Signup2ndClass.this, SignUp3rdClass.class);
+                    intent.putExtra("FullName", fullNameText);
+                    intent.putExtra("Username", usernameText);
+                    intent.putExtra("Email", emailText);
+                    intent.putExtra("Password", passwordText);
+                    intent.putExtra("Gender", gender);
+                    intent.putExtra("dateOfBirth", dateOfBirth);
+
+                    startActivity(intent);
+
+                }
+                });
+
     }
-    public void callToLoginPage(View view)
-    {
-        Intent intent = new Intent(Signup2ndClass.this,Login.class);
-        startActivity(intent);
-    }
-    public void callNextCountryScreen(View view)
-    {
-        if(!validateAge() | !validateGender())
-        {
-            return;
-        }
-
-        //store gender to next activity
-        selectedGender = findViewById(radio.getCheckedRadioButtonId());
-        String gender = selectedGender.getText().toString();
-
-        //get Age details to next screen
-        int day = agePicker.getDayOfMonth();
-        int month = agePicker.getMonth();
-        int year = agePicker.getYear();
-        String dateOfBirth = day+"/"+month+"/"+year;
-
-        String name = getIntent().getStringExtra("fullName");
-        String username = getIntent().getStringExtra("username");
-        String email = getIntent().getStringExtra("email");
-        String password = getIntent().getStringExtra("password");
-
-        Intent intent = new Intent(Signup2ndClass.this,SignUp3rdClass.class);
-        startActivity(intent);
-    }
-
     private  boolean validateGender()
     {
         if (radio.getCheckedRadioButtonId()==-1)
@@ -74,10 +75,8 @@ public class Signup2ndClass extends AppCompatActivity {
             Toast.makeText(this, "Please select gender", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else
-        {
             return true;
-        }
+
     }
 
     private boolean validateAge()
@@ -91,7 +90,7 @@ public class Signup2ndClass extends AppCompatActivity {
             Toast.makeText(this, "You are not eligible to get service", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else
+
             return true;
     }
 }

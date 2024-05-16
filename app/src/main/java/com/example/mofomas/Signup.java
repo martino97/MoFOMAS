@@ -16,11 +16,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.ktx.Firebase;
+
+import java.util.Objects;
 
 public class Signup extends AppCompatActivity {
     //variables
     Button register, loginbtn;
     TextInputLayout fullName, username, password, email;
+    private FirebaseAuth mauth;
 
 
     @SuppressLint("MissingInflatedId")
@@ -34,10 +39,37 @@ public class Signup extends AppCompatActivity {
         loginbtn = findViewById(R.id.signinreg);
 
         //Hooks for passing data into next activities
+        mauth = FirebaseAuth.getInstance();
         fullName = findViewById(R.id.fullnameid);
         username = findViewById(R.id.usernameid);
         email = findViewById(R.id.emailid);
         password = findViewById(R.id.passwordid);
+
+
+        //set onclick listener
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!validateFullName() | !validateUserName() | !validateEmail() | !validatePassword())
+                {
+                    return;
+                }
+                // Extract data from TextInputLayouts
+                String fullNameText = fullName.getEditText().getText().toString().trim();
+                String usernameText = username.getEditText().getText().toString().trim();
+                String emailText = email.getEditText().getText().toString().trim();
+                String passwordText = password.getEditText().getText().toString().trim();
+
+                // Create intent and add data as extras
+                Intent intent = new Intent(Signup.this, Signup2ndClass.class);
+                intent.putExtra("FullName", fullNameText);
+                intent.putExtra("Username", usernameText);
+                intent.putExtra("Email", emailText);
+                intent.putExtra("Password", passwordText);
+                startActivity(intent);
+
+            }
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -45,16 +77,16 @@ public class Signup extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        loginbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Signup.this, Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
-    public void callNextSignupScreen(View view) {
-        if(!validateFullName() | !validateUserName() | !validateEmail() | !validatePassword())
-        {
-            return;
-        }
-        Intent intent = new Intent(Signup.this, Signup2ndClass.class);
-        startActivity(intent);
-    }
 
     private boolean validateFullName() {
         String val = fullName.getEditText().getText().toString().trim();

@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MoFOMAS"
         tools:targetApi="31">
         <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".callNextScreenOTP"
             android:exported="false" />
         <activity

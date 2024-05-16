@@ -1,72 +1,128 @@
 package com.example.mofomas;
-
-import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class Login extends AppCompatActivity {
-    Button signUp;
-            //login;
-    //TextInputLayout username,password;
-    //TextView txtView;
-    @SuppressLint("MissingInflatedId")
+    private TextInputLayout usernameText, password;
+    private Button logIn, createAccount,forget;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        //go to sign up page
-        signUp = findViewById(R.id.Loginreg);
-       /* login = findViewById(R.id.loginid);
-        username = findViewById(R.id.Loginuser);
-        password = findViewById(R.id.Loginpsd);
-        txtView = findViewById(R.id.textView);*/
 
-        signUp.setOnClickListener(new View.OnClickListener() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        // Initialize views
+        usernameText = findViewById(R.id.loginusername);
+        password = findViewById(R.id.loginpassword);
+        logIn = findViewById(R.id.loginid);
+        createAccount = findViewById(R.id.Loginreg);
+        forget = findViewById(R.id.forgetbtn);
+
+        // Set click listener for login button
+        logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login.this,Signup.class);
-                startActivity(intent);
-
-
-              /*  Pair[] pairs = new Pair[5];
-               pairs[0]  = new Pair<View,String>(signUp,"create acc");
-               pairs[1]  = new Pair<View,String>(login,"Login");
-                pairs[2]  = new Pair<View,String>(username,"user");
-                pairs[3]  = new Pair<View,String>(password,"password");
-                pairs[4]  = new Pair<View,String>(txtView,"Login_here");
-                //call next Activities
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Login.this,pairs);
-                //animation and transition to new activities*/
-
-
+                letTheUserLogIn();
             }
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        // Set click listener for create account button
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, Signup.class);
+                startActivity(intent);
+            }
+        });
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, MakeSelection.class);
+                startActivity(intent);
+            }
         });
     }
-public  void forgetPassword(View view)
-{
-    Intent intent = new Intent(Login.this,MakeSelection.class);
-    startActivity(intent);
-}
+
+    private void letTheUserLogIn() {
+        if (!validateFields()) {
+            return;
+        }
+
+        String username = Objects.requireNonNull(usernameText.getEditText()).getText().toString().trim();
+        String userPassword = Objects.requireNonNull(password.getEditText()).getText().toString().trim();
+
+        Query checkUser = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username").equalTo(username);
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                        String systemPassword = userSnapshot.child("Password").getValue(String.class);
+                        Long isAdminLong = userSnapshot.child("isAdmin").getValue(Long.class);
+                        boolean isAdmin = isAdminLong != null && isAdminLong == 1;
+                        if (systemPassword != null && systemPassword.equals(userPassword)) {
+                            // User authenticated successfully
+                            Toast.makeText(Login.this, "User authenticated successfully.", Toast.LENGTH_SHORT).show();
+                            // Start the appropriate activity based on user role
+                            if (isAdmin) {
+                                Intent intent = new Intent(Login.this, AdminDashboardActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(Login.this, callNextScreenOTP.class);
+                                startActivity(intent);
+                            }
+                            finish(); // Close the current activity to prevent going back to login screen
+                            return;
+                        }
+                    }
+                    Toast.makeText(Login.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Login.this, "No such user exists.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Login.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private boolean validateFields() {
+        String _username = Objects.requireNonNull(usernameText.getEditText()).getText().toString().trim();
+        String _password = Objects.requireNonNull(password.getEditText()).getText().toString().trim();
+
+        if (_username.isEmpty()) {
+            usernameText.setError("Username cannot be empty");
+            usernameText.requestFocus();
+            return false;
+        } else if (_password.isEmpty()) {
+            password.setError("Password cannot be empty");
+            password.requestFocus();
+            return false;
+        }
+        return true;
+    }
 }

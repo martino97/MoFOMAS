@@ -35,12 +35,12 @@ public class SignUp3rdClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up3rd_class);
 
-        String _fullName = getIntent().getStringExtra("fullName");
-        String _email = getIntent().getStringExtra("email");
-        String _username = getIntent().getStringExtra("username");
-        String _password = getIntent().getStringExtra("password");
-        String _date = getIntent().getStringExtra("dateOfBirth");
-        String _gender = getIntent().getStringExtra("gender");
+        String fullNameText = getIntent().getStringExtra("FullName");
+        String emailText = getIntent().getStringExtra("Email");
+        String usernameText = getIntent().getStringExtra("Username");
+        String passwordText = getIntent().getStringExtra("Password");
+        String dateOfBirth = getIntent().getStringExtra("dateOfBirth");
+        String gender = getIntent().getStringExtra("Gender");
 
         // Initialize views
         verify = findViewById(R.id.verificationId);
@@ -54,17 +54,18 @@ public class SignUp3rdClass extends AppCompatActivity {
             public void onClick(View v) {
                 if (validatePhoneNumber()) {
                     // Validate phone number and start VerifyOTP activity
-                    String fullPhoneNumber = "+" + ccp.getSelectedCountryCode() + phoneNumber.getEditText().getText().toString().trim();
-                    Intent intent = new Intent(SignUp3rdClass.this, VerifyOTP.class);
+                    String fullPhoneNumber = "+" + ccp.getSelectedCountryCode() + Objects.requireNonNull(phoneNumber.getEditText()).getText().toString().trim();
+                    Intent intent = new Intent(SignUp3rdClass.this,VerifyOTP.class);
 
 
+
+                    intent.putExtra("FullName",fullNameText);
+                    intent.putExtra("Username",usernameText);
+                    intent.putExtra("Email",emailText);
+                    intent.putExtra("Password",passwordText);
+                    intent.putExtra("dateOfBirth",dateOfBirth);
+                    intent.putExtra("Gender",gender);
                     intent.putExtra("phoneNumber", fullPhoneNumber);
-                    intent.putExtra("fullName",_fullName);
-                    intent.putExtra("username",_username);
-                    intent.putExtra("password",_password);
-                    intent.putExtra("email",_email);
-                    intent.putExtra("dateOfBirth",_date);
-                    intent.putExtra("gender",_gender);
                     startActivity(intent);
                 }
             }
@@ -74,7 +75,7 @@ public class SignUp3rdClass extends AppCompatActivity {
 
     public boolean validatePhoneNumber() {
         String countryCodePicker = ccp.getSelectedCountryCode();
-        String fullPhoneNumber = "+" + countryCodePicker + phoneNumber.getEditText().getText().toString().trim();
+        String fullPhoneNumber = "+" + countryCodePicker + Objects.requireNonNull(phoneNumber.getEditText()).getText().toString().trim();
         String regex = "^[+][0-9\\-()/.\\s?]{6,15}[0-9]$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(fullPhoneNumber);

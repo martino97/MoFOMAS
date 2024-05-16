@@ -60,6 +60,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
+            android:id="@+id/loginusername"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:layout_marginStart="5dp"
@@ -85,6 +86,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
+            android:id="@+id/loginpassword"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="5dp"
@@ -141,6 +143,7 @@
             android:background="@drawable/edit"
             android:textColor="@color/black"
             android:transitionName="login"
+            android:onClick="letTheUserLogIn"
             android:text="Login"
             android:textSize="20sp"
             android:layout_marginStart="10dp"

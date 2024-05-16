@@ -145,7 +145,7 @@
         app:boxStrokeWidth="2dp"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:hint="Password"
-        app:startIconDrawable="@drawable/securitytwo"
+        app:startIconDrawable="@drawable/password"
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
