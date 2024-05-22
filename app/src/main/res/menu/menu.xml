@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home"
+        android:icon="@drawable/one"
+        android:id="@+id/home2"
+        android:iconTint="@color/Green"/>
+
+    <item android:title="Cart"
+        android:id="@+id/cart"
+        android:icon="@drawable/cart"
+        android:iconTint="@color/Green"/>
+
+    <item android:title="Search"
+        android:id="@+id/search"
+        android:icon="@drawable/fastfood"
+        android:iconTint="@color/Green"/>
+
+    <item android:title="Category"
+        android:id="@+id/category"
+        android:icon="@drawable/premium"
+        android:iconTint="@color/Green"/>
+
+    <item android:title="Profile"
+        android:id="@+id/profile"
+        android:icon="@drawable/person"
+        android:iconTint="@color/Green" />
+</menu>
