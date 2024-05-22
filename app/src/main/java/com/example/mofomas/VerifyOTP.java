@@ -1,29 +1,22 @@
 package com.example.mofomas;
 
-
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.chaos.view.PinView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -39,12 +32,15 @@ import java.util.concurrent.TimeUnit;
 
 public class VerifyOTP extends AppCompatActivity {
     Button button;
-
+    Button resendCodeButton;
+    TextView phoneNumberTextView;
     PinView pinFromUser;
     String codeBySystem;
     FirebaseAuth mAuth;
     DatabaseReference usersRef;
-    String fullNameText, usernameText, emailText, passwordText, gender, dateOfBirth, phonenumber;
+    String phoneNumber;
+    CountDownTimer countDownTimer;
+    boolean isOtpReceived = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +55,24 @@ public class VerifyOTP extends AppCompatActivity {
         // Initialize views
         pinFromUser = findViewById(R.id.pinView);
         button = findViewById(R.id.verifyingCode);
+        resendCodeButton = findViewById(R.id.resendCode);
+        phoneNumberTextView = findViewById(R.id.phoneNumberTextView);
+
+        // Initially hide the resend button
+        resendCodeButton.setVisibility(View.GONE);
 
         // Get phone number from previous activity
         Intent intent = getIntent();
-        String phoneNumber = intent.getStringExtra("phoneNumber");
+        phoneNumber = intent.getStringExtra("phoneNumber");
+
+        // Format phone number
+        if (phoneNumber.startsWith("0")) {
+            phoneNumber = phoneNumber.substring(1);
+        }
+        phoneNumber =  phoneNumber;
+
+        // Set formatted phone number in the TextView
+        phoneNumberTextView.setText("Enter the One Time Password Sent\n to your Phone " + phoneNumber);
 
         // Send verification code to user
         sendVerificationToUser(phoneNumber);
@@ -73,6 +83,15 @@ public class VerifyOTP extends AppCompatActivity {
                 verifyCode(code);
             } else {
                 Toast.makeText(VerifyOTP.this, "Please enter the OTP", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        resendCodeButton.setOnClickListener(v -> {
+            if (resendCodeButton.isEnabled()) {
+                sendVerificationToUser(phoneNumber);
+                startCountDownTimer();
+            } else {
+                Toast.makeText(VerifyOTP.this, "Please wait before requesting a new code", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -86,12 +105,30 @@ public class VerifyOTP extends AppCompatActivity {
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+        startOtpWaitTimer();
+    }
+
+    private void startOtpWaitTimer() {
+        // Show the resend button after 60 seconds if OTP is not received
+        new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                // Do nothing each tick
+            }
+
+            public void onFinish() {
+                if (!isOtpReceived) {
+                    resendCodeButton.setVisibility(View.VISIBLE);
+                    startCountDownTimer();
+                }
+            }
+        }.start();
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
+            isOtpReceived = true;
             if (code != null) {
                 pinFromUser.setText(code);
                 verifyCode(code);
@@ -137,13 +174,12 @@ public class VerifyOTP extends AppCompatActivity {
         String fullName = intent.getStringExtra("FullName");
         String username = intent.getStringExtra("Username");
         String email = intent.getStringExtra("Email");
-        String password = intent.getStringExtra("Password");
+        String Password = intent.getStringExtra("Password");
         String gender = intent.getStringExtra("Gender");
         String dateOfBirth = intent.getStringExtra("dateOfBirth");
-        String phoneNumber = intent.getStringExtra("phoneNumber");
 
         // Create a new User object
-        User newUser = new User(fullName, username, email, password, gender, dateOfBirth, phoneNumber);
+        User newUser = new User(fullName, username, email, Password, gender, dateOfBirth, phoneNumber);
 
         // Store user data in Firebase
         usersRef.child(username).setValue(newUser)
@@ -159,6 +195,28 @@ public class VerifyOTP extends AppCompatActivity {
                     Log.e(TAG, "Error writing user data to Firebase", e);
                     Toast.makeText(VerifyOTP.this, "Failed to register user. Please try again.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void startCountDownTimer() {
+        resendCodeButton.setEnabled(false);
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                resendCodeButton.setText("Resend Code (" + millisUntilFinished / 1000 + "s)");
+            }
+
+            public void onFinish() {
+                resendCodeButton.setText("Resend Code");
+                resendCodeButton.setEnabled(true);
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     // Define a User class to hold user details

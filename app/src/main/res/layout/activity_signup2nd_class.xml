@@ -2,7 +2,7 @@
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview"
             android:layout_width="match_parent"
-            android:layout_height="420dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="230dp"
             android:textColorHint="@color/white"
@@ -51,7 +51,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="415dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 tools:ignore="MissingConstraints">
 
@@ -109,7 +109,7 @@
                     android:text="Year of Birth"
                     android:textSize="20sp"
                     android:textColor="@color/black"/>
-                
+
                 <DatePicker
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,17 +132,6 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="20dp"/>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:id="@+id/registerlog"
-                    android:layout_height="wrap_content"
-                    android:text="Back to Login"
-                    android:background="#00000000"
-                    android:onClick="callToLoginPage"
-                    android:transitionName="create acc"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center"
-                    android:textSize="16sp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,4 +7,6 @@
     <string name="already_registered" />
     <string name="provide_your_account_s_email_which_you_want_to_reset_your_password">Provide Your Account\'s Email Which you want to reset your email</string>
     <string name="verfication">Verfication</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

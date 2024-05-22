@@ -67,6 +67,7 @@ public class SignUp3rdClass extends AppCompatActivity {
                     intent.putExtra("Gender",gender);
                     intent.putExtra("phoneNumber", fullPhoneNumber);
                     startActivity(intent);
+                    finish();
                 }
             }
 
