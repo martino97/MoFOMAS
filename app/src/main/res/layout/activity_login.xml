@@ -136,6 +136,7 @@
                 android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
+
         <Button
             android:id="@+id/loginid"
             android:layout_width="match_parent"
@@ -149,6 +150,14 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="20dp"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
 
         <Button
             android:layout_width="wrap_content"
@@ -160,6 +169,7 @@
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:textSize="16sp"/>
+
     </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

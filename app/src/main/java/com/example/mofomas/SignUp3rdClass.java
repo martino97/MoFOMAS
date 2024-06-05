@@ -47,9 +47,10 @@ public class SignUp3rdClass extends AppCompatActivity {
         ccp = findViewById(R.id.countryCode);
         verificationEditText = findViewById(R.id.verification);
         phoneNumber = findViewById(R.id.signUpNumber);
-
+        
         // Set click listener for verify button
         verify.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (validatePhoneNumber()) {
@@ -81,5 +82,6 @@ public class SignUp3rdClass extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(fullPhoneNumber);
         return matcher.matches();
+
     }
 }

@@ -1,10 +1,10 @@
 package com.example.mofomas;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,8 +24,9 @@ import java.util.Objects;
 
 public class Login extends AppCompatActivity {
     private TextInputLayout usernameText, password;
-    private Button logIn, createAccount,forget;
+    private Button logIn, createAccount, forget;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,29 +42,20 @@ public class Login extends AppCompatActivity {
         logIn = findViewById(R.id.loginid);
         createAccount = findViewById(R.id.Loginreg);
         forget = findViewById(R.id.forgetbtn);
+        progressBar = findViewById(R.id.progressBar);
 
         // Set click listener for login button
-        logIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                letTheUserLogIn();
-            }
-        });
+        logIn.setOnClickListener(v -> letTheUserLogIn());
 
         // Set click listener for create account button
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Signup.class);
-                startActivity(intent);
-            }
+        createAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, Signup.class);
+            startActivity(intent);
         });
-        forget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, MakeSelection.class);
-                startActivity(intent);
-            }
+
+        forget.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, ForgetPassword.class);
+            startActivity(intent);
         });
     }
 
@@ -69,6 +63,9 @@ public class Login extends AppCompatActivity {
         if (!validateFields()) {
             return;
         }
+
+        // Show the progress bar
+        progressBar.setVisibility(View.VISIBLE);
 
         String username = Objects.requireNonNull(usernameText.getEditText()).getText().toString().trim();
         String userPassword = Objects.requireNonNull(password.getEditText()).getText().toString().trim();
@@ -82,32 +79,63 @@ public class Login extends AppCompatActivity {
                         String systemPassword = userSnapshot.child("Password").getValue(String.class);
                         Long isAdminLong = userSnapshot.child("isAdmin").getValue(Long.class);
                         boolean isAdmin = isAdminLong != null && isAdminLong == 1;
-                        if (systemPassword != null && systemPassword.equals(userPassword)) {
-                            // User authenticated successfully
-                            Toast.makeText(Login.this, "User authenticated successfully.", Toast.LENGTH_SHORT).show();
-                            // Start the appropriate activity based on user role
-                            if (isAdmin) {
-                                Intent intent = new Intent(Login.this, AdminDashboardActivity.class);
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(Login.this, callNextScreenOTP.class);
-                                startActivity(intent);
-                            }
-                            finish(); // Close the current activity to prevent going back to login screen
+                        String email = userSnapshot.child("email").getValue(String.class);
+
+                        if (systemPassword != null && systemPassword.equals(userPassword) && email != null) {
+                            // Authenticate with Firebase Auth using email and password
+                            mAuth.signInWithEmailAndPassword(email, userPassword)
+                                    .addOnCompleteListener(task -> {
+                                        // Hide the progress bar
+                                        progressBar.setVisibility(View.GONE);
+
+                                        if (task.isSuccessful()) {
+                                            // User authenticated successfully
+                                            Toast.makeText(Login.this, "User authenticated successfully.", Toast.LENGTH_SHORT).show();
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            if (user != null) {
+                                                // Start the appropriate activity based on user role
+                                                if (isAdmin) {
+                                                    Intent intent = new Intent(Login.this, AdminDashboardActivity.class);
+                                                    startActivity(intent);
+                                                } else {
+                                                    Intent intent = new Intent(Login.this, callNextScreenOTP.class);
+                                                    startActivity(intent);
+                                                }
+                                                finish(); // Close the current activity to prevent going back to login screen
+                                            }
+                                        } else {
+                                            showAuthenticationError();
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Hide the progress bar
+                                        progressBar.setVisibility(View.GONE);
+                                        showAuthenticationError();
+                                    });
                             return;
                         }
                     }
-                    Toast.makeText(Login.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                    // Hide the progress bar
+                    progressBar.setVisibility(View.GONE);
+                    showAuthenticationError();
                 } else {
-                    Toast.makeText(Login.this, "No such user exists.", Toast.LENGTH_SHORT).show();
+                    // Hide the progress bar
+                    progressBar.setVisibility(View.GONE);
+                    showAuthenticationError();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Hide the progress bar
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(Login.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showAuthenticationError() {
+        Toast.makeText(Login.this, "Authentication failed. Please check your username and password.", Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateFields() {

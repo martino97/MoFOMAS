@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.chaos.view.PinView;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
@@ -181,19 +180,38 @@ public class VerifyOTP extends AppCompatActivity {
         // Create a new User object
         User newUser = new User(fullName, username, email, Password, gender, dateOfBirth, phoneNumber);
 
-        // Store user data in Firebase
-        usersRef.child(username).setValue(newUser)
-                .addOnSuccessListener(aVoid -> {
-                    // User data stored successfully
-                    Toast.makeText(VerifyOTP.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                    // Navigate to MainActivity or any other activity
-                    startActivity(new Intent(VerifyOTP.this, MainActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    // Failed to store user data
-                    Log.e(TAG, "Error writing user data to Firebase", e);
-                    Toast.makeText(VerifyOTP.this, "Failed to register user. Please try again.", Toast.LENGTH_SHORT).show();
+        // Generate a unique ID for the user
+        String userId = usersRef.push().getKey();
+
+        // Store user data in Firebase under the unique ID
+        if (userId != null) {
+            usersRef.child(userId).setValue(newUser)
+                    .addOnSuccessListener(aVoid -> {
+                        // User data stored successfully
+                        Toast.makeText(VerifyOTP.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                        // Create authentication for user with email and password
+                        createAuthUser(email, Password,userId);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Failed to store user data
+                        Log.e(TAG, "Error writing user data to Firebase", e);
+                        Toast.makeText(VerifyOTP.this, "Failed to register user. Please try again.", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private void createAuthUser(String email, String password, String userId) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // User authenticated successfully
+                        startActivity(new Intent(VerifyOTP.this, MainActivity.class));
+                        finish();
+                    } else {
+                        // Authentication failed
+                        Log.e(TAG, "Error creating auth user", task.getException());
+                        Toast.makeText(VerifyOTP.this, "Failed to create user authentication. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
@@ -228,6 +246,10 @@ public class VerifyOTP extends AppCompatActivity {
         public String gender;
         public String dateOfBirth;
         public String phoneNumber;
+
+        public User() {
+            // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        }
 
         public User(String fullName, String username, String email, String Password, String gender, String dateOfBirth, String phoneNumber) {
             this.fullName = fullName;
