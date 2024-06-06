@@ -5,5 +5,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#A49F9F</color>
     <color name="gradient">#F7B2CAB5</color>
+    <color name="red">#c70000</color>
 
 </resources>

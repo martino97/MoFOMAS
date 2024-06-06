@@ -4,7 +4,7 @@ buildscript {
     }
     repositories {
         google()
-      //  mavenCentral()
+        mavenCentral()
        // maven  ( "https://jitpack.io")
     }
 }

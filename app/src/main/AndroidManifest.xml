@@ -17,11 +17,14 @@
         android:theme="@style/Theme.MoFOMAS"
         tools:targetApi="31">
         <activity
+            android:name=".admin.DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".admin.UploadItem"
             android:exported="false" />
         <activity
             android:name=".admin.AddItems"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ForgetPassword"
             android:exported="false" />
