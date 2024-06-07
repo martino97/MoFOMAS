@@ -65,6 +65,8 @@ AdminAdapter adminAdapter;
                 dataList.clear();
                 for(DataSnapshot itemSnapshot:snapshot.getChildren()){
                     DataClass dataClass = itemSnapshot.getValue(DataClass.class);
+                    assert dataClass != null;
+                    dataClass.setKey(itemSnapshot.getKey());
                     dataList.add(dataClass);
                 }
                 adminAdapter.notifyDataSetChanged();

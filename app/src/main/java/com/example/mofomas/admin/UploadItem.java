@@ -32,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -131,7 +133,12 @@ public class UploadItem extends AppCompatActivity {
         String foodCost = foodAmnt.getEditText().getText().toString().trim();
 
         DataClass dataClass = new DataClass(foodName,foodCost,imageURL);
-        FirebaseDatabase.getInstance().getReference().child("FoodItems").child(foodName)
+
+        //We are Changing the child  from title to currentDate
+        String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+
+
+        FirebaseDatabase.getInstance().getReference().child("FoodItems").child(currentDate)
                 .setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

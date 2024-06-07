@@ -4,9 +4,17 @@ public class DataClass {
      private String foodName;
      private String foodAmount;
      private String foodImages;
-     private String foodDesc;
+     private String key;
 
-//These bellow are Getters:
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    //These bellow are Getters:
     public String getFoodName() {
         return foodName;
     }

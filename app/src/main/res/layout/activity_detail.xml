@@ -13,14 +13,23 @@
     android:layout_height="wrap_content"
     android:id="@+id/detailTittle"
     android:text="Tittle"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="50dp"
     android:textSize="20sp"
     android:textColor="@color/Green"
     android:layout_gravity="center"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="20dp"
     android:textStyle="bold"
     />
-    <de.hdodenhof.circleimageview.CircleImageView
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        app:cardCornerRadius="30dp"
+        android:layout_gravity="center"
+        android:elevation="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp">
+    <ImageView
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:id="@+id/detailImage"
@@ -30,13 +39,56 @@
         android:layout_gravity="center"
         android:src="@drawable/fastfood"
          android:scaleType="fitXY"/>
+    </androidx.cardview.widget.CardView>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_gravity="center"
         android:textSize="20sp"
         android:textColor="@color/Green"
         android:textStyle="italic"
+        android:textAlignment="center"
         android:text="Amount"
         android:id="@+id/detailDesc"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <com.github.clans.fab.FloatingActionMenu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            app:menu_fab_size="normal"
+            android:id="@+id/floatingMenu"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            app:menu_colorNormal="@color/Green"
+            app:menu_colorPressed="@color/white"
+            app:menu_icon="@drawable/book"
+            app:menu_openDirection="up"
+            app:menu_showShadow="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/update"
+                android:src="@drawable/update"
+                app:fab_showShadow="true"
+                app:fab_colorNormal="@color/Green"
+                app:fab_size="mini"
+                />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete"
+                android:src="@drawable/delete"
+                app:fab_showShadow="true"
+                app:fab_colorNormal="@color/red"
+                app:fab_size="mini"
+                />
+        </com.github.clans.fab.FloatingActionMenu>
+    </RelativeLayout>
 </LinearLayout>

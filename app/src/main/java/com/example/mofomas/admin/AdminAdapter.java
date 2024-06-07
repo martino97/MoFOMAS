@@ -50,6 +50,8 @@ public class AdminAdapter extends RecyclerView.Adapter<AdminViewHolder> {
                 intent.putExtra("Image",dataList.get(holder.getAdapterPosition()).getFoodImages());
                intent.putExtra("Amount",dataList.get(holder.getAdapterPosition()).getFoodAmount());
                 intent.putExtra("Tittle",dataList.get(holder.getAdapterPosition()).getFoodName());
+                intent.putExtra("Key",dataList.get(holder.getAdapterPosition()).getKey());
+                //intent.putExtra("Language",dataList.get(holder.getAdapterPosition()).getLang());
 
                 context.startActivity(intent);
 
