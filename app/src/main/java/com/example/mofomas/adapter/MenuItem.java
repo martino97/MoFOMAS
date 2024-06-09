@@ -1,24 +1,24 @@
 package com.example.mofomas.adapter;
 public class MenuItem {
-    private String name;
-    private String price;
-    private int imageResource;
+    private String foodName;
+    private String foodAmount;
+    private String foodImages;
 
-    public MenuItem(String name, String price, int imageResource) {
-        this.name = name;
-        this.price = price;
-        this.imageResource = imageResource;
+    public MenuItem(String foodName, String foodAmount, String foodImages) {
+        this.foodName = foodName;
+        this.foodAmount = foodAmount;
+        this.foodImages = foodImages;
     }
 
     public String getName() {
-        return name;
+        return foodName;
     }
 
     public String getPrice() {
-        return price;
+        return foodAmount;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getImageUrl() {
+        return foodImages;
     }
 }

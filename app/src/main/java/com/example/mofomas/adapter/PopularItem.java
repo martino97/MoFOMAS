@@ -1,15 +1,14 @@
 package com.example.mofomas.adapter;
 
-
 public class PopularItem {
     private String foodName;
     private String foodPrice;
-    private int imageResource;
+    private String imageUrl;
 
-    public PopularItem(String foodName, String foodPrice, int imageResource) {
+    public PopularItem(String foodName, String foodPrice, String imageUrl) {
         this.foodName = foodName;
         this.foodPrice = foodPrice;
-        this.imageResource = imageResource;
+        this.imageUrl = imageUrl;
     }
 
     public String getFoodName() {
@@ -20,7 +19,7 @@ public class PopularItem {
         return foodPrice;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

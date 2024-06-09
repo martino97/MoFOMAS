@@ -15,6 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mofomas.MenuAdapter;
 import com.example.mofomas.R;
 import com.example.mofomas.adapter.MenuItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +29,8 @@ public class Search extends Fragment {
     private RecyclerView recyclerView;
     private MenuAdapter menuAdapter;
     private SearchView searchView;
+    private List<MenuItem> menuItems;
+    private List<MenuItem> originalMenuItems;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -33,7 +41,37 @@ public class Search extends Fragment {
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        List<MenuItem> menuItems = getMenuItems();
+        menuItems = new ArrayList<>();
+        originalMenuItems = new ArrayList<>();
+
+        // Retrieve data from Firebase Realtime Database
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("FoodItems");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                originalMenuItems.clear();
+                menuItems.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String name = ds.child("foodName").getValue(String.class);
+                    String price = ds.child("foodAmount").getValue(String.class);
+                    String imageUrl = ds.child("foodImages").getValue(String.class);
+
+                    // Add item to list
+                    MenuItem menuItem = new MenuItem(name, price, imageUrl);
+                    originalMenuItems.add(menuItem);
+                    menuItems.add(menuItem);
+                }
+
+                // Notify adapter of data change
+                menuAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors here
+            }
+        });
+
         menuAdapter = new MenuAdapter(menuItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(menuAdapter);
@@ -41,13 +79,13 @@ public class Search extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                menuAdapter.filter(query);
+                filterMenuItems(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                menuAdapter.filter(newText);
+                filterMenuItems(newText);
                 return false;
             }
         });
@@ -55,23 +93,13 @@ public class Search extends Fragment {
         return view;
     }
 
-    private List<MenuItem> getMenuItems() {
-        List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Tea", "Tsh.500/=", R.drawable.food1));
-        menuItems.add(new MenuItem("Burns", "Tsh.1000/=", R.drawable.food2));
-        menuItems.add(new MenuItem("Cooked Banana", "Tsh.5500/=", R.drawable.food3));
-        menuItems.add(new MenuItem("Coconut Beans ", "Tsh.2000/=", R.drawable.food4));
-        menuItems.add(new MenuItem("Meet Stew", "Tsh.4000/=", R.drawable.food2));
-        menuItems.add(new MenuItem("Roasted Beef", "Tsh.6500/=", R.drawable.food3));
-        menuItems.add(new MenuItem("pilau with Flied Chicken", "Tsh.8000/=", R.drawable.food5));
-        menuItems.add(new MenuItem("French frise with Chicken", "Tsh.6500/=", R.drawable.food3));
-        menuItems.add(new MenuItem("Kababu ", "Tsh.5000/=", R.drawable.food1));
-        menuItems.add(new MenuItem("Chapati with roasted beef", "Tsh.5000/=", R.drawable.food3));
-        menuItems.add(new MenuItem("Coconut rice with Beef", "Tsh.6000/=", R.drawable.food2));
-        menuItems.add(new MenuItem("Rhota", "Tsh.3000/=", R.drawable.food1));
-        menuItems.add(new MenuItem("Bilyan", "Tsh.10000/=", R.drawable.food4));
-        menuItems.add(new MenuItem("Mtori", "Tsh.4500/=", R.drawable.food1));
-        // Add more items as needed
-        return menuItems;
+    private void filterMenuItems(String query) {
+        menuItems.clear();
+        for (MenuItem menuItem : originalMenuItems) {
+            if (menuItem.getName().toLowerCase().contains(query.toLowerCase())) {
+                menuItems.add(menuItem);
+            }
+        }
+        menuAdapter.notifyDataSetChanged();
     }
 }

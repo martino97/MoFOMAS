@@ -7,17 +7,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.mofomas.adapter.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
     private List<MenuItem> menuItems;
-    private List<MenuItem> filteredMenuItems;
 
     public MenuAdapter(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
-        this.filteredMenuItems = new ArrayList<>(menuItems);
     }
 
     @NonNull
@@ -29,28 +29,20 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-        MenuItem menuItem = filteredMenuItems.get(position);
+        MenuItem menuItem = menuItems.get(position);
         holder.menuName.setText(menuItem.getName());
         holder.menuPrice.setText(menuItem.getPrice());
-        holder.menuImage.setImageResource(menuItem.getImageResource());
+        Glide.with(holder.itemView.getContext()).load(menuItem.getImageUrl()).into(holder.menuImage);
     }
 
     @Override
     public int getItemCount() {
-        return filteredMenuItems.size();
+        return menuItems.size();
     }
 
-    public void filter(String query) {
-        filteredMenuItems.clear();
-        if (query.isEmpty()) {
-            filteredMenuItems.addAll(menuItems);
-        } else {
-            for (MenuItem item : menuItems) {
-                if (item.getName().toLowerCase().contains(query.toLowerCase())) {
-                    filteredMenuItems.add(item);
-                }
-            }
-        }
+    public void updateMenuItems(List<MenuItem> newMenuItems) {
+        menuItems.clear();
+        menuItems.addAll(newMenuItems);
         notifyDataSetChanged();
     }
 
