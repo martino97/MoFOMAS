@@ -60,7 +60,7 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
                 }
 
                 // Update the adapter with the new data
-                menuAdapter.updateMenuItems(menuItems);
+                menuAdapter.notifyDataSetChanged(); // Add this line to notify the adapter
             }
 
             @Override
