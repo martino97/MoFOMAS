@@ -1,16 +1,21 @@
-package com.example.mofomas.Fragments;;
+package com.example.mofomas.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.example.mofomas.Login;
 import com.example.mofomas.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +32,7 @@ public class Profile extends Fragment {
     private CardView premiumCardView;
     private CardView standardCardView;
     private CardView casualCardView;
+    private Button logOut;
     private static final String TAG = "ProfileFragment";
 
     @Nullable
@@ -39,9 +45,11 @@ public class Profile extends Fragment {
         premiumCardView = view.findViewById(R.id.premiumCardView);
         standardCardView = view.findViewById(R.id.standardCardView);
         casualCardView = view.findViewById(R.id.casualCardView);
+        logOut = view.findViewById(R.id.button);
 
         loadUsername();
         setupCardViewListeners();
+        setupLogOutButton(); // Added line
 
         return view;
     }
@@ -62,7 +70,7 @@ public class Profile extends Fragment {
                     if (snapshot.exists()) {
                         Log.d(TAG, "Snapshot exists");
                         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                            String fetchedUsername = childSnapshot.child("username").getValue(String.class);
+                            String fetchedUsername = childSnapshot.child("fullName").getValue(String.class);
                             if (fetchedUsername != null) {
                                 usernameTextView.setText(fetchedUsername);
                                 Log.d(TAG, "Username fetched and set: " + fetchedUsername);
@@ -87,7 +95,7 @@ public class Profile extends Fragment {
     }
 
     private void setupCardViewListeners() {
-        cartCardView.setOnClickListener(v -> onCardClick("CART"));
+        cartCardView.setOnClickListener(v -> onCardClick("SIMPLE"));
         premiumCardView.setOnClickListener(v -> onCardClick("PREMIUM"));
         standardCardView.setOnClickListener(v -> onCardClick("STANDARD"));
         casualCardView.setOnClickListener(v -> onCardClick("CASUAL"));
@@ -96,14 +104,61 @@ public class Profile extends Fragment {
     private void onCardClick(String category) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String uid = user.getUid();
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-            databaseReference.child("selectedCategory").setValue(category);
+            String email = user.getEmail();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                            String fullName = childSnapshot.child("fullName").getValue(String.class);
+                            String phoneNumber = childSnapshot.child("phoneNumber").getValue(String.class);
 
-            // Start new activity based on category
-            // Intent intent = new Intent(getActivity(), FoodMenuActivity.class);
-            //  intent.putExtra("CATEGORY", category);
-            //  startActivity(intent);
+                            String uid = user.getUid();
+                            DatabaseReference packageReference = FirebaseDatabase.getInstance().getReference("Package").child(uid);
+                            packageReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        // User has already chosen a package, restrict them from choosing again
+                                        Toast.makeText(getActivity(), "You have already chosen a package", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // User has not chosen a package, allow them to choose
+                                        packageReference.child("selectedCategory").setValue(category);
+                                        packageReference.child("fullName").setValue(fullName);
+                                        packageReference.child("phoneNumber").setValue(phoneNumber);
+                                        Toast.makeText(getActivity(), "Package chosen successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e(TAG, "Database error: " + error.getMessage());
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d(TAG, "User data not found");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e(TAG, "Database error: " + error.getMessage());
+                }
+            });
+        } else {
+            Log.d(TAG, "User is not authenticated");
         }
+    }
+
+    // Logging user out  by using firebase authentication ID's
+    private void setupLogOutButton() {
+        logOut.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getActivity(), Login.class);
+            startActivity(intent);
+            getActivity().finish();
+        });
     }
 }

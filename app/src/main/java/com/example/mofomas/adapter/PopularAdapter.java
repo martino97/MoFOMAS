@@ -1,11 +1,11 @@
 package com.example.mofomas.adapter;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -13,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mofomas.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -26,11 +23,16 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     private Context context;
     private List<PopularItem> popularItemList;
     private DatabaseReference databaseReference;
+    private OnAddToCartClickListener onAddToCartClickListener;
 
-    public PopularAdapter(Context context, List<PopularItem> popularItemList) {
+    public PopularAdapter(Context context, List<PopularItem> popularItemList, OnAddToCartClickListener item) {
         this.context = context;
         this.popularItemList = popularItemList;
-        databaseReference = FirebaseDatabase.getInstance().getReference("PopularMenu");
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodItems");
+    }
+
+    public void setOnAddToCartClickListener(OnAddToCartClickListener onAddToCartClickListener) {
+        this.onAddToCartClickListener = onAddToCartClickListener;
     }
 
     @NonNull
@@ -52,9 +54,9 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             @Override
             public void onClick(View v) {
                 // Add item to cart
-               // PopularItem popularItem = popularItemList.get(position);
-              //  CartItem cartItem = new CartItem(popularItem.getFoodName(), popularItem.getFoodPrice(), popularItem.getImageUrl(), 1);
-                //databaseReference.child(popularItem.getFoodName()).setValue(cartItem);
+                if (onAddToCartClickListener != null) {
+                    onAddToCartClickListener.onAddToCartClick(item);
+                }
             }
         });
     }
@@ -80,5 +82,9 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             foodPrice = itemView.findViewById(R.id.textView5);
             addToCart = itemView.findViewById(R.id.textView4);
         }
+    }
+
+    public interface OnAddToCartClickListener {
+        void onAddToCartClick(PopularItem item);
     }
 }

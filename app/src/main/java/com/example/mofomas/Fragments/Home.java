@@ -52,7 +52,20 @@ public class Home extends Fragment {
         popularItemList = new ArrayList<>();
 
         // Set up adapter
-        popularAdapter = new PopularAdapter(getActivity(), popularItemList);
+        popularAdapter = new PopularAdapter(getActivity(), popularItemList, new PopularAdapter.OnAddToCartClickListener() {
+            @Override
+            public void onAddToCartClick(PopularItem item) {
+                // Add the item to the cart and navigate to the Cart fragment
+                Cart cartFragment = new Cart();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("item", item);
+                cartFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.home2, cartFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         recyclerView.setAdapter(popularAdapter);
 
         // Retrieve data from Firebase Realtime Database

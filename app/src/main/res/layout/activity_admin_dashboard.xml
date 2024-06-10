@@ -293,6 +293,7 @@
             android:layout_gravity="fill"
             android:layout_margin="8dp"
             android:layout_row="1"
+            android:id="@+id/packageId"
             android:layout_rowWeight="1"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">

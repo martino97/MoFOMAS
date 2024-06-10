@@ -12,13 +12,27 @@
         android:layout_height="match_parent"
         tools:context=".USER_DASHBOARD">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Choose Your Package"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:fontFamily="cursive"
+            android:textColor="@color/Green"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:id="@+id/cardview"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
             android:textColorHint="@color/white"
             app:cardCornerRadius="28dp"
             android:layout_columnWeight="1"
@@ -74,7 +88,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CART"
+                            android:text="SIMPLE"
                             android:textAlignment="center"
                             android:textStyle="bold" />
 
@@ -254,7 +268,7 @@
             android:layout_marginEnd="25dp"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Submit"
+            android:text="Log Out"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
