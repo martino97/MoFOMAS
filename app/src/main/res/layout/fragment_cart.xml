@@ -41,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/edit"
-            android:onClick="letTheUserLogIn"
             android:text="Confirm"
             android:textColor="@color/white"
             android:textSize="20sp"
