@@ -2,36 +2,32 @@ package com.example.mofomas.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mofomas.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularViewHolder> {
 
+    private static final String TAG = "PopularAdapter";
     private Context context;
     private List<PopularItem> popularItemList;
-    private DatabaseReference databaseReference;
     private OnAddToCartClickListener onAddToCartClickListener;
 
-    public PopularAdapter(Context context, List<PopularItem> popularItemList, OnAddToCartClickListener item) {
+    public PopularAdapter(Context context, List<PopularItem> popularItemList, OnAddToCartClickListener onAddToCartClickListener) {
         this.context = context;
         this.popularItemList = popularItemList;
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodItems");
-    }
-
-    public void setOnAddToCartClickListener(OnAddToCartClickListener onAddToCartClickListener) {
         this.onAddToCartClickListener = onAddToCartClickListener;
     }
 
@@ -53,7 +49,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
         holder.addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add item to cart
+                Log.d(TAG, "Add to Cart clicked for item: " + item.getFoodName());
                 if (onAddToCartClickListener != null) {
                     onAddToCartClickListener.onAddToCartClick(item);
                 }
@@ -84,6 +80,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
         }
     }
 
+    //This is an interface that retrieve item from the popular item to Cart
     public interface OnAddToCartClickListener {
         void onAddToCartClick(PopularItem item);
     }

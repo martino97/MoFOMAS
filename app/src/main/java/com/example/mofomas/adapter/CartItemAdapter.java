@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mofomas.R;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartViewHolder> {
 
@@ -35,11 +38,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem cartItem = cartItemList.get(position);
         holder.foodName.setText(cartItem.getName());
+        holder.amount.setText(cartItem.getAmount());
         holder.quantity.setText(String.valueOf(cartItem.getQuantity()));
-        holder.imageView.setImageResource(cartItem.getImageResource());
+        Glide.with(context)
+                .load(cartItem.getImageResource())
+                .into(holder.imageView);
 
         holder.incrementButton.setOnClickListener(v -> {
-            if (cartItem.getQuantity() < 10) {
+            if (cartItem.getQuantity() < 1000) {
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
                 notifyItemChanged(position);
             }
@@ -65,14 +71,15 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartVi
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView foodName, quantity;
-        ImageView imageView;
+        TextView foodName, quantity,amount;
+        CircleImageView imageView;
         ImageButton incrementButton, decrementButton, deleteButton;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             foodName = itemView.findViewById(R.id.textView2);
             quantity = itemView.findViewById(R.id.textView7);
+            amount = itemView.findViewById(R.id.textView3);
             imageView = itemView.findViewById(R.id.imageView4);
             incrementButton = itemView.findViewById(R.id.button);
             decrementButton = itemView.findViewById(R.id.button2);

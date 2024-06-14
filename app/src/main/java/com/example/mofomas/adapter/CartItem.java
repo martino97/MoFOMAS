@@ -1,12 +1,15 @@
 package com.example.mofomas.adapter;
 public class CartItem {
     private String name;
-    private int quantity;
-    private int imageResource;
 
-    public CartItem(String name, int quantity, int imageResource) {
+    private String amount;
+    private int quantity;
+    private String imageResource;
+
+    public CartItem(String name,String amount, String imageResource, int quantity) {
         this.name = name;
-        this.quantity = quantity;
+        this.amount = amount;
+        this.quantity = 1;
         this.imageResource = imageResource;
     }
 
@@ -14,10 +17,9 @@ public class CartItem {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    public void setName(String name) {this.name = name;}
+    public String getAmount() {return amount;}
+    public void setAmount(String amount) {this.amount = amount;}
     public int getQuantity() {
         return quantity;
     }
@@ -26,11 +28,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public int getImageResource() {
+    public String getImageResource() {
         return imageResource;
     }
 
-    public void setImageResource(int imageResource) {
+    public void setImageResource(String imageResource) {
         this.imageResource = imageResource;
     }
 }

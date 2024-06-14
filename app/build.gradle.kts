@@ -54,11 +54,12 @@ dependencies {
     implementation (libs.glide)
     annotationProcessor(libs.compiler)
     implementation (libs.fab)
-
-      //  implementation (libs.autoimageslider.v111)
+    implementation (libs.gson)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-       //mplementation (libs.appcompat.v7)
+
+      //  implementation (libs.autoimageslider.v111)
+      //mplementation (libs.appcompat.v7)
        //mplementation (libs.design)
        //mplementation (libs.android.support.vector.drawable)
 

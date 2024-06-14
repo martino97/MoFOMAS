@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mofomas.Login;
 import com.example.mofomas.R;
+import com.example.mofomas.adapter.CartManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +35,7 @@ public class Profile extends Fragment {
     private CardView casualCardView;
     private Button logOut;
     private static final String TAG = "ProfileFragment";
+    private String currentUserId;
 
     @Nullable
     @Override
@@ -46,6 +48,9 @@ public class Profile extends Fragment {
         standardCardView = view.findViewById(R.id.standardCardView);
         casualCardView = view.findViewById(R.id.casualCardView);
         logOut = view.findViewById(R.id.button);
+
+        // Get current user email to identify the current user
+        currentUserId = getCurrentUserEmail();
 
         loadUsername();
         setupCardViewListeners();
@@ -152,10 +157,22 @@ public class Profile extends Fragment {
         }
     }
 
-    // Logging user out  by using firebase authentication ID's
+    // Get current user email
+    private String getCurrentUserEmail() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            return user.getEmail();
+        } else {
+            return "guest"; // Fallback or handle the case when user is not logged in
+        }
+    }
+
+    // Logging user out and clearing the cart by using firebase authentication ID's
     private void setupLogOutButton() {
         logOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
+            CartManager.getInstance(getActivity()).clearCart(currentUserId);
+
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
             getActivity().finish();

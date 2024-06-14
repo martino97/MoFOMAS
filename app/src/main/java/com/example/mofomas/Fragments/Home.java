@@ -16,6 +16,7 @@ import com.example.mofomas.MenuBottomSheetFragment;
 import com.example.mofomas.R;
 import com.example.mofomas.adapter.PopularAdapter;
 import com.example.mofomas.adapter.PopularItem;
+import com.example.mofomas.callNextScreenOTP; // Import the hosting activity
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class Home extends Fragment {
 
+    private static final String TAG = "HomeFragment";
     private RecyclerView recyclerView;
     private PopularAdapter popularAdapter;
     private List<PopularItem> popularItemList;
@@ -40,7 +42,7 @@ public class Home extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -55,15 +57,9 @@ public class Home extends Fragment {
         popularAdapter = new PopularAdapter(getActivity(), popularItemList, new PopularAdapter.OnAddToCartClickListener() {
             @Override
             public void onAddToCartClick(PopularItem item) {
-                // Add the item to the cart and navigate to the Cart fragment
-                Cart cartFragment = new Cart();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("item", item);
-                cartFragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.home2, cartFragment)
-                        .addToBackStack(null)
-                        .commit();
+                Log.d(TAG, "onAddToCartClick: Item clicked - " + item.getFoodName());
+                // Call method in the hosting activity to handle item addition to cart
+                ((callNextScreenOTP) requireActivity()).addItemToCart(item);
             }
         });
         recyclerView.setAdapter(popularAdapter);
@@ -79,17 +75,22 @@ public class Home extends Fragment {
                     String price = ds.child("foodAmount").getValue(String.class);
                     String imageUrl = ds.child("foodImages").getValue(String.class);
 
+                    Log.d(TAG, "Data from Firebase - Name: " + name + ", Price: " + price + ", Image: " + imageUrl);
+
                     // Add item to list
-                    popularItemList.add(new PopularItem(name, price, imageUrl));
+                    if (name != null && price != null && imageUrl != null) {
+                        popularItemList.add(new PopularItem(name, price, imageUrl));
+                    }
                 }
 
                 // Notify adapter of data change
                 popularAdapter.notifyDataSetChanged();
+                Log.d(TAG, "Data updated in adapter, item count: " + popularAdapter.getItemCount());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors here
+                Log.e(TAG, "Database error: " + databaseError.getMessage());
             }
         });
 
@@ -98,7 +99,7 @@ public class Home extends Fragment {
         viewMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("HomeFragment", "View Menu clicked");
+                Log.d(TAG, "View Menu clicked");
                 MenuBottomSheetFragment bottomSheetFragment = new MenuBottomSheetFragment();
                 bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
             }
