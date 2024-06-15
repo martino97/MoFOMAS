@@ -88,11 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Female" />
-                    <RadioButton
-                        android:id="@+id/others"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="others" />
+
                 </RadioGroup>
                     <View
                         android:layout_width="match_parent"

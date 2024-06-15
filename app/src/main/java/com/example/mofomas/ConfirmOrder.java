@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -21,8 +22,12 @@ import com.example.mofomas.adapter.CartManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -166,30 +171,60 @@ public class ConfirmOrder extends AppCompatActivity {
     private void uploadOrderDetails(String location, String date, String time) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String userId = user.getUid();
             String userEmail = user.getEmail();
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("FoodOrders").push();
+            // Get reference to the Users node in Firebase Database
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
 
-            Map<String, Object> orderDetails = new HashMap<>();
-            orderDetails.put("userId", userId);
-            orderDetails.put("userEmail", userEmail);
-            orderDetails.put("location", location);
-            orderDetails.put("date", date);
-            orderDetails.put("time", time);
-            orderDetails.put("cartItems", cartItemList);
+            // Query to find the user node based on email
+            Query query = usersRef.orderByChild("email").equalTo(userEmail);
 
-            databaseReference.setValue(orderDetails)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Order confirmed successfully", Toast.LENGTH_SHORT).show();
-                        clearCart();
-                        notifyCartFragment();
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to upload order details", e);
-                        Toast.makeText(this, "Failed to confirm order. Please try again.", Toast.LENGTH_SHORT).show();
-                    });
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // There should be only one matching user node since emails are unique
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            String fullName = userSnapshot.child("fullName").getValue(String.class);
+                            String phoneNumber = userSnapshot.child("phoneNumber").getValue(String.class);
+
+                            // Proceed with uploading order details
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("FoodOrders").push();
+
+                            Map<String, Object> orderDetails = new HashMap<>();
+                            orderDetails.put("userId", user.getUid());
+                            orderDetails.put("userEmail", userEmail);
+                            orderDetails.put("fullName", fullName);
+                            orderDetails.put("phoneNumber", phoneNumber);
+                            orderDetails.put("location", location);
+                            orderDetails.put("date", date);
+                            orderDetails.put("time", time);
+                            orderDetails.put("cartItems", cartItemList);
+
+                            databaseReference.setValue(orderDetails)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(ConfirmOrder.this, "Order confirmed successfully", Toast.LENGTH_SHORT).show();
+                                        clearCart();
+                                        notifyCartFragment();
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Failed to upload order details", e);
+                                        Toast.makeText(ConfirmOrder.this, "Failed to confirm order. Please try again.", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    } else {
+                        Log.e(TAG, "User data not found in Users node");
+                        Toast.makeText(ConfirmOrder.this, "User data not found. Unable to confirm order.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e(TAG, "Database error: " + error.getMessage());
+                    Toast.makeText(ConfirmOrder.this, "Database error. Please try again later.", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
         }
@@ -254,7 +289,7 @@ public class ConfirmOrder extends AppCompatActivity {
                 (view, selectedHour, selectedMinute) -> {
                     String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
                     timeEditText.setText(formattedTime);
-                }, hour, minute, false);
+                }, hour, minute, true);
         timePickerDialog.show();
     }
 }
