@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    >
 
     <TextView
         android:id="@+id/textViewItemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:paddingRight="8dp"
+        android:text="Item Name:"
         android:textColor="@android:color/black"/>
 
     <TextView
@@ -17,14 +20,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:paddingRight="8dp"
+        android:text="Quantity:"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/textViewItemAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:paddingRight="8dp"
+        android:text="Amount:"
+        android:textColor="@color/black"/>
 
     <!-- Add more TextViews or ImageViews as needed for other properties of CartItem -->
 
