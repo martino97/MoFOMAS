@@ -1,6 +1,10 @@
 package com.example.mofomas.admin;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mofomas.R;
@@ -49,8 +55,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         });
 
         holder.buttonConfirm.setOnClickListener(v -> {
-            Toast.makeText(context, "Order confirmed for " + order.getFullName(), Toast.LENGTH_SHORT).show();
-            // Send message to user (implement as needed)
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
+            } else {
+                sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service  being processed. Thank you!");
+            }
         });
     }
 
@@ -75,5 +84,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             layoutExpandable = itemView.findViewById(R.id.layoutExpandable);
             buttonConfirm = itemView.findViewById(R.id.buttonConfirm);
         }
+    }
+
+    private void sendSms(String phoneNumber, String message) {
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+        Toast.makeText(context, "SMS sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
     }
 }
