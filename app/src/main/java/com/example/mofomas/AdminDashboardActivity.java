@@ -25,7 +25,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // Find the "Add Item" CardView by its ID
         CardView addItemCardView = findViewById(R.id.cardViewAddMenu);
         CardView packageCardView = findViewById(R.id.packageId);
-       // CardView view = findViewById(R.id.viewOrder);
+        CardView view = findViewById(R.id.viewOrder);
 
         // Set click listener for the "Add Item" CardView
         addItemCardView.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +33,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Navigate to AddItemActivity
                 Intent intent = new Intent(AdminDashboardActivity.this, AddItems.class);
+                startActivity(intent);
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to AddItemActivity
+                Intent intent = new Intent(AdminDashboardActivity.this, ViewOrder.class);
                 startActivity(intent);
             }
         });
