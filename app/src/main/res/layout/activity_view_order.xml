@@ -57,6 +57,11 @@
             android:layout_height="wrap_content"
             android:text="Time"
             android:padding="4dp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCartItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
 
         <Button
             android:id="@+id/buttonConfirm"

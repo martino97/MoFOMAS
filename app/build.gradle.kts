@@ -46,6 +46,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth-ktx")
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     implementation (libs.chaosleung.pinview)
     implementation (libs.navigation.fragment.ktx)

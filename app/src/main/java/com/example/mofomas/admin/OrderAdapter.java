@@ -1,3 +1,4 @@
+// OrderAdapter.java
 package com.example.mofomas.admin;
 
 import android.Manifest;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mofomas.R;
@@ -49,6 +51,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.textViewLocation.setText("Location: " + order.getLocation());
         holder.textViewTime.setText("Time: " + order.getTime());
 
+        holder.recyclerViewCartItems.setLayoutManager(new LinearLayoutManager(context));
+        CartItemAdapter cartItemAdapter = new CartItemAdapter(context, order.getCartItems());
+        holder.recyclerViewCartItems.setAdapter(cartItemAdapter);
+
         boolean isExpanded = holder.layoutExpandable.getVisibility() == View.VISIBLE;
         holder.textViewOrderDetails.setOnClickListener(v -> {
             holder.layoutExpandable.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
@@ -58,7 +64,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
             } else {
-                sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service  being processed. Thank you!");
+                sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed. Thank you!");
             }
         });
     }
@@ -71,6 +77,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView textViewOrderDetails, textViewFullName, textViewPhoneNumber, textViewDate, textViewLocation, textViewTime;
         LinearLayout layoutExpandable;
+        RecyclerView recyclerViewCartItems;
         Button buttonConfirm;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -82,6 +89,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             textViewLocation = itemView.findViewById(R.id.textViewLocation);
             textViewTime = itemView.findViewById(R.id.textViewTime);
             layoutExpandable = itemView.findViewById(R.id.layoutExpandable);
+            recyclerViewCartItems = itemView.findViewById(R.id.recyclerViewCartItems);
             buttonConfirm = itemView.findViewById(R.id.buttonConfirm);
         }
     }
