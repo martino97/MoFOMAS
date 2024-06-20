@@ -1,4 +1,3 @@
-// OrderAdapter.java
 package com.example.mofomas.admin;
 
 import android.Manifest;
@@ -21,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mofomas.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -28,10 +29,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     private Context context;
     private List<Order> orderList;
+    private DatabaseReference foodOrderRef;
+    private DatabaseReference orderHistoryRef;
 
     public OrderAdapter(Context context, List<Order> orderList) {
         this.context = context;
         this.orderList = orderList;
+        // Initialize Firebase references
+        foodOrderRef = FirebaseDatabase.getInstance().getReference("FoodOrder");
+        orderHistoryRef = FirebaseDatabase.getInstance().getReference("OrderHistory");
     }
 
     @NonNull
@@ -65,6 +71,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
             } else {
                 sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed. Thank you!");
+                moveOrderToHistory(order, position);
             }
         });
     }
@@ -98,5 +105,29 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber, null, message, null, null);
         Toast.makeText(context, "SMS sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
+    }
+
+    private void moveOrderToHistory(Order order, int position) {
+        String orderId = order.getFullName(); // Assume Order class has a method getOrderId()
+
+        // Remove order from FoodOrder
+        foodOrderRef.child(orderId).removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Add order to OrderHistory
+                orderHistoryRef.child(orderId).setValue(order).addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        Toast.makeText(context, "Order moved to history", Toast.LENGTH_SHORT).show();
+                        // Remove order from the list and notify the adapter
+                        orderList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, orderList.size());
+                    } else {
+                        Toast.makeText(context, "Failed to add order to history", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(context, "Failed to remove order from FoodOrder", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

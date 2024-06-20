@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mofomas.admin.AddItems;
+import com.example.mofomas.admin.OrderHistory;
+import com.example.mofomas.admin.OrderHistoryActivity;
 import com.example.mofomas.admin.ViewPackage;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         CardView addItemCardView = findViewById(R.id.cardViewAddMenu);
         CardView packageCardView = findViewById(R.id.packageId);
         CardView view = findViewById(R.id.viewOrder);
+        CardView history = findViewById(R.id.historyCard);
 
         // Set click listener for the "Add Item" CardView
         addItemCardView.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +54,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Navigate to ViewPackageActivity
                 Intent intent = new Intent(AdminDashboardActivity.this, ViewPackage.class);
+                startActivity(intent);
+            }
+        });
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to AddItemActivity
+                Intent intent = new Intent(AdminDashboardActivity.this, OrderHistoryActivity.class);
                 startActivity(intent);
             }
         });

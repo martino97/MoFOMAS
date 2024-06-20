@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     id("com.google.gms.google-services")
 
+
 }
 
 android {
@@ -51,6 +52,8 @@ dependencies {
     implementation (libs.chaosleung.pinview)
     implementation (libs.navigation.fragment.ktx)
     implementation (libs.circleimageview)
+    implementation (libs.firebase.messaging)
+
     implementation (libs.navigation.ui.ktx)
     implementation (libs.glide)
     annotationProcessor(libs.compiler)

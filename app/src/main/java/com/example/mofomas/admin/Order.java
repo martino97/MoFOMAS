@@ -3,6 +3,7 @@ package com.example.mofomas.admin;
 import java.util.List;
 
 public class Order {
+    private  String orderId;
     private String date;
     private String fullName;
     private String location;
@@ -16,8 +17,11 @@ public class Order {
         // Default constructor required for Firebase
     }
 
-    public Order(String date, String fullName, String location, String phoneNumber, String time,
+
+
+    public Order(String orderId, String date, String fullName, String location, String phoneNumber, String time,
                  String userEmail, String userId, List<CartItem> cartItems) {
+        this.orderId = orderId;
         this.date = date;
         this.fullName = fullName;
         this.location = location;
@@ -29,6 +33,9 @@ public class Order {
     }
 
     // Getters and setters
+    public String getOrderId() {return orderId;}
+
+    public void setOrderId(String orderId) {this.orderId = orderId;}
     public String getDate() {
         return date;
     }
