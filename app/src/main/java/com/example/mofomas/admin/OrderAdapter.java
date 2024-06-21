@@ -108,25 +108,27 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     private void moveOrderToHistory(Order order, int position) {
-        String orderId = order.getFullName(); // Assume Order class has a method getOrderId()
+        String orderId = order.getUserId(); // Assuming Order class has a method getOrderId()
 
-        // Remove order from FoodOrder
-        foodOrderRef.child(orderId).removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Add order to OrderHistory
-                orderHistoryRef.child(orderId).setValue(order).addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
+        // Add order to OrderHistory
+        orderHistoryRef.child(orderId).setValue(order).addOnCompleteListener(task1 -> {
+            if (task1.isSuccessful()) {
+                // Only if adding to OrderHistory is successful, remove order from FoodOrder
+                foodOrderRef.child(orderId).removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
                         Toast.makeText(context, "Order moved to history", Toast.LENGTH_SHORT).show();
                         // Remove order from the list and notify the adapter
                         orderList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, orderList.size());
+
+                        foodOrderRef.child(orderId).removeValue();
                     } else {
-                        Toast.makeText(context, "Failed to add order to history", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Failed to remove order from FoodOrder", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(context, "Failed to remove order from FoodOrder", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Failed to add order to history", Toast.LENGTH_SHORT).show();
             }
         });
     }
