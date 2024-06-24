@@ -188,10 +188,20 @@ public class ConfirmOrder extends AppCompatActivity {
                             String fullName = userSnapshot.child("fullName").getValue(String.class);
                             String phoneNumber = userSnapshot.child("phoneNumber").getValue(String.class);
 
+                            // Generate unique orderId
+                            String orderId = FirebaseDatabase.getInstance().getReference("FoodOrders").push().getKey();
+
+                            if (orderId == null) {
+                                Log.e(TAG, "Failed to generate orderId");
+                                Toast.makeText(ConfirmOrder.this, "Failed to confirm order. Please try again.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             // Proceed with uploading order details
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("FoodOrders").push();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("FoodOrders").child(orderId);
 
                             Map<String, Object> orderDetails = new HashMap<>();
+                            orderDetails.put("orderId", orderId);
                             orderDetails.put("userId", user.getUid());
                             orderDetails.put("userEmail", userEmail);
                             orderDetails.put("fullName", fullName);

@@ -11,7 +11,10 @@ public class Order {
     private String time;
     private String userEmail;
     private String userId;
-    private List<CartItem> cartItems; // List of cart items
+    private List<CartItem> cartItems;
+
+
+    private boolean isConfirmed;
 
     public Order() {
         // Default constructor required for Firebase
@@ -20,7 +23,7 @@ public class Order {
 
 
     public Order(String orderId, String date, String fullName, String location, String phoneNumber, String time,
-                 String userEmail, String userId, List<CartItem> cartItems) {
+                 String userEmail, String userId, List<CartItem> cartItems,boolean isConfirmed) {
         this.orderId = orderId;
         this.date = date;
         this.fullName = fullName;
@@ -30,6 +33,7 @@ public class Order {
         this.userEmail = userEmail;
         this.userId = userId;
         this.cartItems = cartItems;
+        this.isConfirmed = isConfirmed;
     }
 
     // Getters and setters
@@ -99,4 +103,7 @@ public class Order {
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
+    public boolean isConfirmed() {return isConfirmed;}
+
+    public void setConfirmed(boolean confirmed) {isConfirmed = confirmed;}
 }

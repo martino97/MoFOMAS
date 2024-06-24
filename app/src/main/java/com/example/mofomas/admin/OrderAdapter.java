@@ -36,7 +36,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         this.context = context;
         this.orderList = orderList;
         // Initialize Firebase references
-        foodOrderRef = FirebaseDatabase.getInstance().getReference("FoodOrder");
+        foodOrderRef = FirebaseDatabase.getInstance().getReference("FoodOrders");
         orderHistoryRef = FirebaseDatabase.getInstance().getReference("OrderHistory");
     }
 
@@ -66,14 +66,20 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             holder.layoutExpandable.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
         });
 
-        holder.buttonConfirm.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
-            } else {
-                sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed. Thank you!");
-                moveOrderToHistory(order, position);
-            }
-        });
+        // Check if order is confirmed and disable button if it is
+        if (order.isConfirmed()) {
+            holder.buttonConfirm.setEnabled(false);
+        } else {
+            holder.buttonConfirm.setEnabled(true);
+            holder.buttonConfirm.setOnClickListener(v -> {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
+                } else {
+                    sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed. Thank you!");
+                    moveOrderToHistory(order, position);
+                }
+            });
+        }
     }
 
     @Override
@@ -108,7 +114,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     private void moveOrderToHistory(Order order, int position) {
-        String orderId = order.getUserId(); // Assuming Order class has a method getOrderId()
+        String orderId = order.getOrderId(); // Assuming Order class has a method getUserId()
 
         // Add order to OrderHistory
         orderHistoryRef.child(orderId).setValue(order).addOnCompleteListener(task1 -> {
@@ -117,12 +123,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 foodOrderRef.child(orderId).removeValue().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(context, "Order moved to history", Toast.LENGTH_SHORT).show();
-                        // Remove order from the list and notify the adapter
-                        orderList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, orderList.size());
-
-                        foodOrderRef.child(orderId).removeValue();
+                        // Update the order to be confirmed
+                        order.setConfirmed(true);
+                        notifyItemChanged(position);
                     } else {
                         Toast.makeText(context, "Failed to remove order from FoodOrder", Toast.LENGTH_SHORT).show();
                     }
