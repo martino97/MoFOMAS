@@ -56,6 +56,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
+        // Set click listener for "ViewOrder" CardView
         viewOrderCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +76,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
+        // Set click listener for "OrderHistory" CardView
         historyCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

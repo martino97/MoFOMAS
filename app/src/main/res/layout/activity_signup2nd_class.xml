@@ -9,7 +9,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/mofomas"
+        android:background="@drawable/mocufoma"
         tools:context=".Signup2ndClass">
 
 
@@ -17,8 +17,9 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="370dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="310dp"
+            android:textColor="@color/black"
             android:fontFamily="cursive"
             android:text="Login here"
             android:transitionName="Login_here"
@@ -93,7 +94,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/Green"
+                        android:background="@color/ascent"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"/>
                 </LinearLayout>

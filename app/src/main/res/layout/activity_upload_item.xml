@@ -29,7 +29,7 @@
                 android:text="Upload Item"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:textColor="@color/Green" />
+                android:textColor="@color/ascent" />
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"

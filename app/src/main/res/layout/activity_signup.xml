@@ -8,7 +8,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mofomas"
+    android:background="@drawable/mocufoma"
     tools:context=".Signup">
 
     <TextView
@@ -18,15 +18,15 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="cursive"
         android:text="Register here"
-        android:transitionName="Login_here"
         android:textAlignment="center"
+        android:textColor="@color/black"
         android:textSize="40sp"
+        android:transitionName="Login_here"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.416"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.131" />
+        app:layout_constraintVertical_bias="0.13" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview2"

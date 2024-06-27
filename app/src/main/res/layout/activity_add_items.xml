@@ -16,7 +16,7 @@
             android:fontFamily="cursive"
             android:gravity="center"
             android:text="Uploaded Menu"
-            android:textColor="@color/Green"
+            android:textColor="@color/ascent"
             android:textSize="25sp" />
 
         <androidx.appcompat.widget.SearchView
@@ -48,7 +48,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="15dp"
             android:id="@+id/fabIcon"
-            android:backgroundTint="@color/Green"
+            android:backgroundTint="@color/ascent"
             android:src="@drawable/addit"
             android:tint="@color/white"
             />

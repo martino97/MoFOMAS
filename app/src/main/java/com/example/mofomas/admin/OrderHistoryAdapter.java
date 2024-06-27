@@ -1,6 +1,7 @@
-// OrderHistoryAdapter.java
+
 package com.example.mofomas.admin;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         return new OrderHistoryViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull OrderHistoryViewHolder holder, int position) {
         Order order = orderHistoryList.get(position);

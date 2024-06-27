@@ -7,5 +7,8 @@
     <color name="gradient">#F7B2CAB5</color>
     <color name="red">#c70000</color>
     <color name="GreenB">#053207</color>
+    <color name="ascent">#0082fa</color>
+    <color name="ascent2">#056fe7</color>
+    <color name="ascent3">#1e73be</color>
 
 </resources>

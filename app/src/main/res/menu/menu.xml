@@ -17,12 +17,12 @@
         android:icon="@drawable/fastfood"
         android:iconTint="@color/Green"/>
 
-    <item android:title="Category"
+    <item android:title="Payments"
         android:id="@+id/category"
         android:icon="@drawable/premium"
         android:iconTint="@color/Green"/>
 
-    <item android:title="Profile"
+    <item android:title="Category"
         android:id="@+id/profile"
         android:icon="@drawable/person"
         android:iconTint="@color/Green" />

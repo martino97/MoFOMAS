@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Menu"
-        android:textColor="@color/Green"
+        android:textColor="@color/ascent"
         android:textStyle="bold|italic"
         android:layout_gravity="center"
         android:gravity="center"

@@ -1,6 +1,7 @@
 package com.example.mofomas.admin;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -47,6 +48,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return new OrderViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
@@ -75,7 +77,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.SEND_SMS}, 1);
                 } else {
-                    sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed. Thank you!");
+                    sendSms(order.getPhoneNumber(), "Your order has been received by MoCU-FOMA kindly wait for your service being processed and issued. Thank you! for Choosing the home of best Meals");
                     moveOrderToHistory(order, position);
                 }
             });
@@ -114,7 +116,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     private void moveOrderToHistory(Order order, int position) {
-        String orderId = order.getOrderId(); // Assuming Order class has a method getUserId()
+        // the Method getOrderId() will be used to remove the order item from the table path FoodOrders to table path OrderHistory in Firebase
+        String orderId = order.getOrderId();
 
         // Add order to OrderHistory
         orderHistoryRef.child(orderId).setValue(order).addOnCompleteListener(task1 -> {

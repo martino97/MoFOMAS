@@ -81,7 +81,7 @@
                 android:gravity="center"
                 android:text="Tsh.7000/="
                 android:textAlignment="center"
-                android:textColor="@color/Green"
+                android:textColor="@color/ascent2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/menuImage" />
         </androidx.constraintlayout.widget.ConstraintLayout>

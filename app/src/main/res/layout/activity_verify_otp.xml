@@ -5,32 +5,31 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/mofomas"
+        android:background="@drawable/mocufoma"
         tools:context=".SignUp3rdClass">
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="370dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="320dp"
             android:fontFamily="cursive"
             android:text="Verification"
-            android:transitionName="Login_here"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="40sp"
+            android:transitionName="Login_here"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.461"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.209" />
+            app:layout_constraintVertical_bias="0.23" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview"
@@ -61,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:text="Verification Code"
                     android:textSize="30sp"
-                    android:textColor="@color/Green"
+                    android:textColor="@color/ascent"
                     android:textStyle="bold"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
@@ -88,9 +87,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:cursorVisible="true"
-                    app:cursorColor="@color/Green"
+                    app:cursorColor="@color/ascent"
                     android:inputType="number"
-                    android:textColor="@color/Green"
+                    android:textColor="@color/ascent"
                     app:hideLineWhenFilled="true"
                     app:itemCount="6"
                     app:itemHeight="50dp"
@@ -115,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:textColor="@color/Green"
+                    android:textColor="@color/ascent"
                     android:transitionName="resend"
                     android:text="Resend Code"
                     android:textSize="16sp"

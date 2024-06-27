@@ -5,48 +5,41 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mofomas"
+    android:background="@drawable/mocufoma"
     tools:context=".Login">
-
 
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp"
-        android:layout_marginBottom="370dp"
-        android:fontFamily="cursive"
+        android:layout_marginTop="112dp"
         android:text="Login here"
-        android:transitionName="Login_here"
         android:textAlignment="center"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:transitionName="Login_here"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.209" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="420dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="230dp"
+        android:layout_marginTop="180dp"
         android:textColorHint="@color/white"
         app:cardCornerRadius="28dp"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
         android:foregroundGravity="fill"
         app:cardElevation="8dp"
-        android:outlineSpotShadowColor="@color/Green"
+        android:outlineSpotShadowColor="@color/ascent"
         android:alpha="1.7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
