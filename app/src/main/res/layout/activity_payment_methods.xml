@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF8DC"
+    tools:context=".PaymentMethods">
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Close"
+        android:src="@drawable/backward"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/paymentMethodsCard"
+        android:layout_below="@id/closeButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Payment Method"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioAirtelMoney"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Airtel Money"
+                    android:padding="8dp"
+                    android:buttonTint="@color/ascent"/>
+
+                <RadioButton
+                    android:id="@+id/radioKPay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="K-Pay"
+                    android:padding="8dp"
+                    android:buttonTint="@color/ascent"/>
+
+                <RadioButton
+                    android:id="@+id/radioTigoPesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tigo Pesa"
+                    android:padding="8dp"
+                    android:buttonTint="@color/ascent"/>
+
+                <RadioButton
+                    android:id="@+id/radioMpesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mpesa"
+                    android:padding="8dp"
+                    android:buttonTint="@color/ascent"/>
+
+                <RadioButton
+                    android:id="@+id/radioHalopesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Halopesa"
+                    android:padding="8dp"
+                    android:buttonTint="@color/ascent"/>
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/payButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Pay"
+                android:backgroundTint="@color/ascent"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <!-- New CardView for animated text -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/paymentMethodsCard"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp">
+
+        <TextView
+            android:id="@+id/animatedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You Can Pay Now Through AirtelMoney Mpesa TigoPesa K-pay and HaloPesa"
+            android:textSize="16sp"
+            android:textColor="@color/ascent"
+            android:padding="16dp"/>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
