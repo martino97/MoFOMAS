@@ -5,10 +5,68 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Category">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="category" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="top|center"
+    android:layout_marginTop="15dp">
 
-</FrameLayout>
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your History"
+            android:textColor="@color/ascent"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+           />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoriesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+             />
+
+        <ProgressBar
+            android:id="@+id/loadingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+       />
+
+
+</LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/payment_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="16dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/payment_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/deposit"
+            android:contentDescription="Payment Icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/ascent"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="Payment"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    </FrameLayout>

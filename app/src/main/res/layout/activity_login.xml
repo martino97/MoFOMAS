@@ -161,7 +161,8 @@
             android:transitionName="create acc"
             android:textColor="@color/black"
             android:layout_gravity="center"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            />
 
     </LinearLayout>
     </androidx.cardview.widget.CardView>

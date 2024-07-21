@@ -94,76 +94,47 @@ public class ConfirmOrder extends AppCompatActivity {
             if (location.isEmpty() || date.isEmpty() || time.isEmpty()) {
                 Toast.makeText(this, "Please enter location, date, and time", Toast.LENGTH_SHORT).show();
             } else {
-                if (isDateValid(date) && isTimeValid(time)) {
-                    showConfirmationDialog(location, date, time);
-                } else {
-                    if (!isDateValid(date)) {
-                        Toast.makeText(this, "The date entered is already passed. Please enter the current date or above.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Please enter a time at least 2 hours from now", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                showConfirmationDialog(location, date, time);
             }
         });
     }
 
     private void showConfirmationDialog(String location, String date, String time) {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirm Order")
-                .setMessage("Are you sure you want to place this order?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    uploadOrderDetails(location, date, time);
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    // Do nothing
-                })
-                .show();
+        if (isDateTimeValid(date, time)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm Order")
+                    .setMessage("Are you sure you want to place this order?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        uploadOrderDetails(location, date, time);
+                    })
+                    .setNegativeButton("No", (dialog, which) -> {
+                        // Do nothing
+                    })
+                    .show();
+        } else {
+            Toast.makeText(this, "Please select a valid date and time (at least 2 hours from now)", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private boolean isTimeValid(String inputTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private boolean isDateTimeValid(String inputDate, String inputTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         try {
-            Date orderTime = sdf.parse(inputTime);
-            if (orderTime != null) {
+            Date selectedDateTime = sdf.parse(inputDate + " " + inputTime);
+            if (selectedDateTime != null) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(orderTime);
+                calendar.setTime(selectedDateTime);
 
-                // Get current time
-                Calendar currentTime = Calendar.getInstance();
-
-                // Set the order time calendar to today, with the provided hour and minute
-                calendar.set(Calendar.YEAR, currentTime.get(Calendar.YEAR));
-                calendar.set(Calendar.MONTH, currentTime.get(Calendar.MONTH));
-                calendar.set(Calendar.DAY_OF_MONTH, currentTime.get(Calendar.DAY_OF_MONTH));
+                // Get current date and time
+                Calendar currentDateTime = Calendar.getInstance();
 
                 // Add 2 hours to the current time
-                currentTime.add(Calendar.HOUR_OF_DAY, 2);
+                currentDateTime.add(Calendar.HOUR_OF_DAY, 2);
 
-                // Check if the input time is equal to or after the current time plus 2 hours
-                return calendar.equals(currentTime) || calendar.after(currentTime);
+                // Check if the selected date and time is after the current time plus 2 hours
+                return calendar.after(currentDateTime);
             }
         } catch (ParseException e) {
-            Log.e(TAG, "Invalid time format", e);
-        }
-        return false;
-    }
-
-    private boolean isDateValid(String inputDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        try {
-            Date selectedDate = sdf.parse(inputDate);
-            if (selectedDate != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(selectedDate);
-
-                // Get current date
-                Calendar currentDate = Calendar.getInstance();
-
-                // Check if the selected date is today or in the future
-                return calendar.equals(currentDate) || calendar.after(currentDate);
-            }
-        } catch (ParseException e) {
-            Log.e(TAG, "Invalid date format", e);
+            Log.e(TAG, "Invalid date or time format", e);
         }
         return false;
     }
@@ -245,16 +216,10 @@ public class ConfirmOrder extends AppCompatActivity {
     }
 
     private void notifyCartFragment() {
-        // Notify the CartFragment to update its data
-        // This can be achieved by sending a broadcast or using an event bus like LiveData, or directly invoking a method
-        // Assuming we're using a local broadcast or similar mechanism
-        // For this example, let's use LocalBroadcastManager (you'll need to add the dependency for LocalBroadcastManager)
-
         Intent intent = new Intent("ACTION_CLEAR_CART");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    // Method to get the current user email
     private String getCurrentUserEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -274,15 +239,10 @@ public class ConfirmOrder extends AppCompatActivity {
         // Create and show the DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Check if the selected date is after or equal to the current date
                     Calendar selectedDate = Calendar.getInstance();
                     selectedDate.set(selectedYear, selectedMonth, selectedDay);
-                    if (selectedDate.compareTo(calendar) >= 0) {
-                        String formattedDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
-                        dateEditText.setText(formattedDate);
-                    } else {
-                        Toast.makeText(this, "Please select a date starting from today or later", Toast.LENGTH_SHORT).show();
-                    }
+                    String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    dateEditText.setText(formattedDate);
                 }, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.show();

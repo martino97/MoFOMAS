@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,7 +77,9 @@ public class Login extends AppCompatActivity {
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         String systemPassword = userSnapshot.child("Password").getValue(String.class);
                         Long isAdminLong = userSnapshot.child("isAdmin").getValue(Long.class);
+                        Long isDelivererLong = userSnapshot.child("isDeliverer").getValue(Long.class);
                         boolean isAdmin = isAdminLong != null && isAdminLong == 1;
+                        boolean isDeliverer = isDelivererLong != null && isDelivererLong == 1;
                         String email = userSnapshot.child("email").getValue(String.class);
 
                         if (systemPassword != null && systemPassword.equals(userPassword) && email != null) {
@@ -96,6 +97,9 @@ public class Login extends AppCompatActivity {
                                                 // Start the appropriate activity based on user role
                                                 if (isAdmin) {
                                                     Intent intent = new Intent(Login.this, AdminDashboardActivity.class);
+                                                    startActivity(intent);
+                                                } else if (isDeliverer) {
+                                                    Intent intent = new Intent(Login.this, Deliverer.class);
                                                     startActivity(intent);
                                                 } else {
                                                     Intent intent = new Intent(Login.this, callNextScreenOTP.class);
