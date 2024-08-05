@@ -24,11 +24,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
 
     private RecyclerView recyclerViews;
     private MenuAdapter menuAdapter;
     private List<MenuItem> menuItems;
+    private CartUpdateListener cartUpdateListener;
+
+    public interface CartUpdateListener {
+        void onAddToCart(MenuItem item);
+    }
+
+    public void setCartUpdateListener(CartUpdateListener listener) {
+        this.cartUpdateListener = listener;
+    }
 
     @Nullable
     @Override
@@ -40,6 +50,15 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
         menuItems = new ArrayList<>();
 
         menuAdapter = new MenuAdapter(menuItems);
+        menuAdapter.setOnAddToCartClickListener(new MenuAdapter.OnAddToCartClickListener() {
+            @Override
+            public void onAddToCartClick(MenuItem item) {
+                if (cartUpdateListener != null) {
+                    cartUpdateListener.onAddToCart(item);
+                    Log.d("MenuBottomSheetFragment", "Item added to cart: " + item.getName());
+                }
+            }
+        });
         recyclerViews.setAdapter(menuAdapter);
 
         // Retrieve data from Firebase Realtime Database

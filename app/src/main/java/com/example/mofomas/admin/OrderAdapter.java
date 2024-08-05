@@ -63,9 +63,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         CartItemAdapter cartItemAdapter = new CartItemAdapter(context, order.getCartItems());
         holder.recyclerViewCartItems.setAdapter(cartItemAdapter);
 
-        boolean isExpanded = holder.layoutExpandable.getVisibility() == View.VISIBLE;
+        // Set initial state
+        holder.layoutExpandable.setVisibility(View.GONE);
+
+        // Modified click listener for expandable/minimizable functionality
         holder.textViewOrderDetails.setOnClickListener(v -> {
+            boolean isExpanded = holder.layoutExpandable.getVisibility() == View.VISIBLE;
             holder.layoutExpandable.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+
+            // Update the text to indicate expanded/collapsed state
+            holder.textViewOrderDetails.setText(isExpanded ?
+                    "Order " + (position + 1) + " (Tap to expand)" :
+                    "Order " + (position + 1) + " (Tap to collapse)");
         });
 
         // Check if order is confirmed and disable button if it is

@@ -4,40 +4,44 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hbb20.CountryCodePicker;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ForgetPassword extends AppCompatActivity {
 
-
     private Button verify;
     private TextInputLayout phoneNumber;
-    private TextInputEditText verificationEditText;
     private CountryCodePicker ccp;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
 
-      /*  String fullNameText = getIntent().getStringExtra("FullName");
-        String emailText = getIntent().getStringExtra("Email");
-        String usernameText = getIntent().getStringExtra("Username");
-        String passwordText = getIntent().getStringExtra("Password");
-        String dateOfBirth = getIntent().getStringExtra("dateOfBirth");
-        String gender = getIntent().getStringExtra("Gender");*/
+        // Initialize Firebase Auth and Database
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Initialize views
         verify = findViewById(R.id.sendRequest);
@@ -46,29 +50,71 @@ public class ForgetPassword extends AppCompatActivity {
 
         // Set click listener for verify button
         verify.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (validatePhoneNumber()) {
-                    // Validate phone number and start VerifyOTP activity
-                    String fullPhoneNumber = "+" + ccp.getSelectedCountryCode() + Objects.requireNonNull(phoneNumber.getEditText()).getText().toString().trim();
-                    Intent intent = new Intent(ForgetPassword.this,VerifyOTP.class);
+                    checkPhoneNumberExistsAndSendOTP();
+                }
+            }
+        });
+    }
 
+    private void checkPhoneNumberExistsAndSendOTP() {
+        String fullPhoneNumber = "+" + ccp.getSelectedCountryCode() + Objects.requireNonNull(phoneNumber.getEditText()).getText().toString().trim();
 
-
-                   /* intent.putExtra("FullName",fullNameText);
-                    intent.putExtra("Username",usernameText);
-                    intent.putExtra("Email",emailText);
-                    intent.putExtra("Password",passwordText);
-                    intent.putExtra("dateOfBirth",dateOfBirth);
-                    intent.putExtra("Gender",gender);
-                    intent.putExtra("phoneNumber", fullPhoneNumber);*/
-                    startActivity(intent);
-                    finish();
+        mDatabase.child("Users").orderByChild("phoneNumber").equalTo(fullPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Phone number exists, send OTP
+                    sendOTP(fullPhoneNumber);
+                } else {
+                    // Phone number doesn't exist
+                    Toast.makeText(ForgetPassword.this, "Phone number not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ForgetPassword.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    private void sendOTP(String phoneNumber) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,
+                60,
+                TimeUnit.SECONDS,
+                this,
+                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        // This callback will be invoked in two situations:
+                        // 1 - Instant verification. In some cases the phone number can be instantly
+                        //     verified without needing to send or enter a verification code.
+                        // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                        //     detect the incoming verification SMS and perform verification without
+                        //     user action.
+                    }
+
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        Toast.makeText(ForgetPassword.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        // The SMS verification code has been sent to the provided phone number
+                        // Now start the OTP verification activity
+                        Intent intent = new Intent(ForgetPassword.this, VerifyOTP.class);
+                        intent.putExtra("phoneNumber", phoneNumber);
+                        intent.putExtra("verificationId", verificationId);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+        );
     }
 
     public boolean validatePhoneNumber() {
@@ -78,6 +124,5 @@ public class ForgetPassword extends AppCompatActivity {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(fullPhoneNumber);
         return matcher.matches();
-
     }
 }

@@ -40,6 +40,7 @@ public class VerifyOTP extends AppCompatActivity {
     String phoneNumber;
     CountDownTimer countDownTimer;
     boolean isOtpReceived = false;
+    boolean isPasswordReset = false; // New flag to check if this is a password reset flow
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class VerifyOTP extends AppCompatActivity {
         // Get phone number from previous activity
         Intent intent = getIntent();
         phoneNumber = intent.getStringExtra("phoneNumber");
+        isPasswordReset = intent.getBooleanExtra("isPasswordReset", false); // Check if this is a password reset flow
 
         // Format phone number
         if (phoneNumber.startsWith("0")) {
@@ -94,7 +96,6 @@ public class VerifyOTP extends AppCompatActivity {
             }
         });
     }
-
     private void sendVerificationToUser(String phoneNumber) {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
@@ -153,8 +154,16 @@ public class VerifyOTP extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = task.getResult().getUser();
                         if (user != null) {
-                            // User authenticated successfully, store user data in Firebase
-                            storeUserDataInFirebase();
+                            if (isPasswordReset) {
+                                // If it's a password reset flow, navigate to ResetPassword activity
+                                Intent resetIntent = new Intent(VerifyOTP.this, ResetPassword.class);
+                                resetIntent.putExtra("userId", user.getUid());
+                                startActivity(resetIntent);
+                                finish();
+                            } else {
+                                // If it's a registration flow, continue with storing user data
+                                storeUserDataInFirebase();
+                            }
                         }
                     } else {
                         // Verification failed
@@ -166,7 +175,6 @@ public class VerifyOTP extends AppCompatActivity {
                     }
                 });
     }
-
     private void storeUserDataInFirebase() {
         // Retrieve user data from previous activities
         Intent intent = getIntent();
@@ -260,5 +268,13 @@ public class VerifyOTP extends AppCompatActivity {
             this.dateOfBirth = dateOfBirth;
             this.phoneNumber = phoneNumber;
         }
+
     }
+    private void navigateToResetPassword(String userId) {
+        Intent intent = new Intent(VerifyOTP.this, ResetPassword.class);
+        intent.putExtra("userId", userId);
+        startActivity(intent);
+        finish();
+    }
+
 }

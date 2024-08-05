@@ -16,7 +16,8 @@ import com.example.mofomas.MenuBottomSheetFragment;
 import com.example.mofomas.R;
 import com.example.mofomas.adapter.PopularAdapter;
 import com.example.mofomas.adapter.PopularItem;
-import com.example.mofomas.callNextScreenOTP; // Import the hosting activity
+import com.example.mofomas.adapter.MenuItem;
+import com.example.mofomas.callNextScreenOTP;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends Fragment {
+public class Home extends Fragment implements MenuBottomSheetFragment.CartUpdateListener {
 
     private static final String TAG = "HomeFragment";
     private RecyclerView recyclerView;
@@ -101,10 +102,19 @@ public class Home extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "View Menu clicked");
                 MenuBottomSheetFragment bottomSheetFragment = new MenuBottomSheetFragment();
+                bottomSheetFragment.setCartUpdateListener(Home.this);
                 bottomSheetFragment.show(getParentFragmentManager(), bottomSheetFragment.getTag());
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onAddToCart(MenuItem item) {
+        Log.d(TAG, "onAddToCart: Item added to cart from MenuBottomSheet - " + item.getName());
+        // Convert MenuItem to PopularItem if necessary, or modify your callNextScreenOTP to accept MenuItem
+        PopularItem popularItem = new PopularItem(item.getName(), item.getPrice(), item.getImageUrl());
+        ((callNextScreenOTP) requireActivity()).addItemToCart(popularItem);
     }
 }

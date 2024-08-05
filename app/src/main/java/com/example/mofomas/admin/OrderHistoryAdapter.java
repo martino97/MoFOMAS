@@ -53,9 +53,17 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         CartItemAdapter cartItemAdapter = new CartItemAdapter(context, order.getCartItems());
         holder.recyclerViewOrderHistory.setAdapter(cartItemAdapter);
 
-        boolean isExpanded = holder.layoutExpandable.getVisibility() == View.VISIBLE;
+        holder.layoutExpandable.setVisibility(View.GONE);
+
+        // Modified click listener for expandable/minimizable functionality
         holder.textViewOrderDetails.setOnClickListener(v -> {
+            boolean isExpanded = holder.layoutExpandable.getVisibility() == View.VISIBLE;
             holder.layoutExpandable.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+
+            // Update the text to indicate expanded/collapsed state
+            holder.textViewOrderDetails.setText(isExpanded ?
+                    "Order " + (position + 1) + " (Tap to expand)" :
+                    "Order " + (position + 1) + " (Tap to collapse)");
         });
 
         // Check if the order has been delivered

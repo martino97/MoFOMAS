@@ -26,6 +26,12 @@
         android:theme="@style/Theme.MoFOMAS"
         tools:targetApi="31">
         <activity
+            android:name=".OrderApproval"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPassword"
+            android:exported="false" />
+        <activity
             android:name=".Deliverer"
             android:exported="false" />
         <activity

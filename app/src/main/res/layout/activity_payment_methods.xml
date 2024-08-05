@@ -60,7 +60,7 @@
                     android:id="@+id/radioKPay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="K-Pay"
+                    android:text="MoCU-Pay"
                     android:padding="8dp"
                     android:buttonTint="@color/ascent"/>
 
